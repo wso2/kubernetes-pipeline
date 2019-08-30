@@ -1,0 +1,18 @@
+dependencies:
+- name: spinnaker
+  version: 1.15.0
+  repository: https://kubernetes-charts.storage.googleapis.com
+  condition: redis.enabled
+- name: prometheus-operator
+  version: 6.7.3
+  repository: https://kubernetes-charts.storage.googleapis.com
+- name: kibana
+  version: 7.3.0
+  repository: https://helm.elastic.co
+- name: elasticsearch
+  version: 7.3.0
+  repository: https://helm.elastic.co
+- name: prometheus-blackbox-exporter
+  version: 1.1.0
+  repository: https://kubernetes-charts.storage.googleapis.com
+  

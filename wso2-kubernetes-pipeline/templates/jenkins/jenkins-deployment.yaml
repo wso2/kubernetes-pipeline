@@ -1,0 +1,122 @@
+# Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+piVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: jenkins
+  labels:
+    app: jenkins
+spec:
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: jenkins
+        tier: jenkins
+    spec:
+      serviceAccountName: jenkins
+      initContainers:
+      - image: alpine/helm:2.14.0
+        name: helm-config
+        command: ["/bin/sh"]
+        args: ["-c", "helm init --client-only; helm repo remove local; helm repo add wso2 https://helm.wso2.com; helm repo update"]
+        volumeMounts:
+        - name: helm-conf
+          mountPath: "/root/.helm"
+      containers:
+      - image: {{ .Values.image }}
+        name: jenkins
+        env:
+        - name: JAVA_OPTS
+          value: "-Djenkins.install.runSetupWizard=false"
+        {{- if and (not (eq .Values.wso2Username "")) (not (eq .Values.wso2Password "")) }}
+        - name: WSO2_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: wso2-credentials
+              key: username
+        - name: WSO2_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: wso2-credentials
+              key: password
+        {{- end }}
+        - name: REGISTRY_SERVER
+          valueFrom:
+            secretKeyRef:
+              name: registry-credentials-pod
+              key: server
+        - name: REGISTRY_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: registry-credentials-pod
+              key: username
+        - name: REGISTRY_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: registry-credentials-pod
+              key: password
+        - name: GITHUB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: github-credentials
+              key: username
+        - name: GITHUB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: github-credentials
+              key: password
+        - name: CASC_JENKINS_CONFIG
+          value: "/var/casc_configs"
+        imagePullPolicy: Always
+        readinessProbe:
+          periodSeconds: 10
+          httpGet:
+            path: "/login"
+            port: 8080
+        livenessProbe:
+          periodSeconds: 10
+          initialDelaySeconds: 300
+          httpGet:
+            path: "/login"
+            port: 8080
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        - name: docker
+          mountPath: /var/run/docker.sock
+        - name: jenkins-persistent-storage
+          mountPath: /var/jenkins_home
+        - name: jenkins-casc-conf
+          mountPath: /var/casc_configs
+        - name: helm-conf
+          mountPath: "/root/.helm"
+        ports:
+        - containerPort: 8080
+          name: jenkins
+          protocol: TCP
+      volumes:
+      - name: docker
+        hostPath:
+          path: /var/run/docker.sock
+      - name: jenkins-persistent-storage
+        persistentVolumeClaim:
+          claimName: jenkins-claim
+      - name: jenkins-casc-conf
+        configMap:
+          name: jenkins-casc-conf
+      - name: helm-conf
+        emptyDir: {}
