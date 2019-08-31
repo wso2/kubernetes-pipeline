@@ -76,8 +76,7 @@ docker push <DOCKER_ORGANIZATION>/wso2ei-integrator
 
     ```
     kubectl get ing -n <NAMESPACE>
-    ```
-    ```
+
     NAME                            HOSTS            ADDRESS            PORTS       AGE
     <RELEASE_NAME>-grafana          grafana         <EXTERNAL_IP>       80          20m
     <RELEASE_NAME>-kibana           kibana          <EXTERNAL_IP>       80          20m
