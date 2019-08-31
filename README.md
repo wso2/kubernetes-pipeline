@@ -2,7 +2,7 @@
 *Helm Resources for container-based deployments of WSO2 Kubernetes Pipeline for WSO2 products*
 
 ## Overview
-WSO2 Kubernetes pipeline provides tools and preconfigured pipelines used for continuous integration and deployment. The setup is deployed on top of Kubernetes using helm, which makes the processes of configuring, installing, scaling and upgrading simple.
+WSO2 Kubernetes pipeline provides tools and preconfigured pipelines used for continuous integration and deployment. The setup is deployed on top of Kubernetes using Helm, which makes the processes of configuring, installing, scaling and upgrading simple.
 
 Following are the tools used to install and monitor the pipeline
 - Jenkins: Continous integration
