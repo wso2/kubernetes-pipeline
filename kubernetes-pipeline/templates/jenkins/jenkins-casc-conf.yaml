@@ -186,8 +186,7 @@ data:
 
                 TAG=`cat {{ $image.microgateway.projectName }}/conf/deployment-config.toml | grep "tag" | awk '{print \\\$3}' | sed "s/'//g"`
 
-                sed -i 's|\$MICROGW_TOOLKIT_HOME|/wso2am-micro-gw-toolkit-3.0.1|' {{ $image.microgateway.projectName }}/conf/deployment-config.toml
-                cat {{ $image.microgateway.projectName }}/conf/deployment-config.toml
+                sed -i 's|\$MICROGW_TOOLKIT_HOME|/wso2am-micro-gw-toolkit-3.0.1|' {{ $image.microgateway.projectName }}/{{ $image.microgateway.deploymentConfigPath }}
 
                 micro-gw build {{ $image.microgateway.projectName }} --deployment-config {{ $image.microgateway.projectName }}/conf/deployment-config.toml
 
