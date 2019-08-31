@@ -15,7 +15,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: spinnaker-jenkins-job-configurator
+  name: {{.Release.Name}}-spinnaker-jenkins-job-configurator
 spec:
   template:
     spec:
