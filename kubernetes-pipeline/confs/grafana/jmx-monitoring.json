@@ -2161,7 +2161,7 @@
     ]
   },
   "timezone": "browser",
-  "title": "WSO2 products - JMX",
+  "title": "WSO2 products - JMX monitoring",
   "uid": "wso2-jmx-dashboard",
   "version": 1
 }

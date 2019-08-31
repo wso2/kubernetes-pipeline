@@ -2205,7 +2205,7 @@
     ]
   },
   "timezone": "browser",
-  "title": "WSO2 products - JVM",
+  "title": "WSO2 products - JVM monitoring",
   "uid": "wso2-jvm-dashboard",
   "version": 1
 }
