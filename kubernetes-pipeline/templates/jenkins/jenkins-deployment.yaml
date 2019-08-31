@@ -15,7 +15,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: jenkins
+  name: {{.Release.Name}}-jenkins
   labels:
     app: jenkins
 spec:
