@@ -127,8 +127,6 @@ kubeStateMetrics:
     enabled: false
 
 prometheus-blackbox-exporter:
-  serviceMonitor:
-    enabled: true
   config: 
     modules:
       http_2xx:
