@@ -216,6 +216,9 @@ data:
                   "wso2.deployment.{{ $image.deployment }}.imageName": "{{ $image.repository }}",
                   "wso2.deployment.{{ $image.deployment }}.imageTag": "",
                   "wso2.deployment.{{ $image.deployment }}.imagePullSecrets": "regcred",
+                  {{- if $image.microgateway }}
+                  "wso2.deployment.wso2microgw.projectName": "{{ $image.microgateway.projectName }}",
+                  {{- end }}
                   {{- end }}
                   "wso2.subscription.username": "{{ $root.Values.wso2Username }}",
                   "wso2.subscription.password": "{{ $root.Values.wso2Password }}",
@@ -266,6 +269,9 @@ data:
                   "wso2.deployment.{{ $image.deployment }}.imageName": "{{ $image.repository }}",
                   "wso2.deployment.{{ $image.deployment }}.imageTag": "",
                   "wso2.deployment.{{ $image.deployment }}.imagePullSecrets": "regcred",
+                  {{- if $image.microgateway }}
+                  "wso2.deployment.wso2microgw.projectName": "{{ $image.microgateway.projectName }}",
+                  {{- end }}
                   {{- end }}
                   "wso2.subscription.username": "{{ $root.Values.wso2Username }}",
                   "wso2.subscription.password": "{{ $root.Values.wso2Password }}",
@@ -316,6 +322,9 @@ data:
                   "wso2.deployment.{{ $image.deployment }}.imageName": "{{ $image.repository }}",
                   "wso2.deployment.{{ $image.deployment }}.imageTag": "",
                   "wso2.deployment.{{ $image.deployment }}.imagePullSecrets": "regcred",
+                  {{- if $image.microgateway }}
+                  "wso2.deployment.wso2microgw.projectName": "{{ $image.microgateway.projectName }}",
+                  {{- end }}
                   {{- end }}
                   "wso2.subscription.username": "{{ $root.Values.wso2Username }}",
                   "wso2.subscription.password": "{{ $root.Values.wso2Password }}",
