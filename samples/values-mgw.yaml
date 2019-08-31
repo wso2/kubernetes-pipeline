@@ -53,5 +53,5 @@ applications:
         repository: petstore
         microgateway:
           gitRepository: 'https://github.com/wso2-incubator/microgateway-petstore'
-          
-
+          deploymentConfigPath: conf/deployment-config.toml
+          projectName: petstore
