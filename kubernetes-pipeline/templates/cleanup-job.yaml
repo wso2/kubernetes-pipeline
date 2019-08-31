@@ -15,7 +15,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: cleanup-kubernetes-artifacts-job
+  name: {{.Release.Name}}-cleanup-kubernetes-artifacts-job
   annotations:
     "helm.sh/hook": "pre-delete"
     "helm.sh/hook-delete-policy": "before-hook-creation"
