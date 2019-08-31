@@ -2,22 +2,24 @@
 *Helm Resources for container-based deployments of WSO2 Kubernetes Pipeline for WSO2 products*
 
 ## Overview
-The tools consist of Jenkins and Spinnaker. They are the primary tools used for continuous integration and deployment. The setup is deployed on top of Kubernetes using HELM, which makes the processes of configuration, installation, scaling, and upgrading simple. Additionally, Jenkins jobs and Spinnaker pipelines are preconfigured, making the process of getting started hassle-free.
+WSO2 Kubernetes pipeline provides tools and preconfigured pipelines used for continuous integration and deployment. The setup is deployed on top of Kubernetes using helm, which makes the processes of configuring, installing, scaling and upgrading simple.
+
+Following are the tools used to install and monitor the pipeline
+- Jenkins: Continous integration
+- Spinnaker: Continous deployment to Kubernetes
+- ELK: Centralized logging
+- Prometheus-operator: Monitoring deployments and visualization using grafana
+
 
 ![Architecture Diagram](pipeline_architecture.jpg)
 
 ## Installation
 
-Use the following getting started guides to install kubernetes pipelines for the resepective WSO2 product.
+Use the following getting started guides to install Kubernetes pipelines for the resepective WSO2 product.
 
 * [Getting started with WSO2 Enterprise Integrator](docs/getting-started-ei.md)
 * [Getting started with WSO2 Identity and Access Management](docs/getting-started-is.md)
 * [Getting started with WSO2 API Microgateway](docs/getting-started-mgw.md)
-
-## Reporting issues
-
-We encourage you to report any issues and documentation faults regarding Kubernetes and Helm resources
-for WSO2 Kubernetes pipeline. Please report your issues [here](https://github.com/wso2/kubernetes-pipeline/issues).
 
 ## Contact us
 

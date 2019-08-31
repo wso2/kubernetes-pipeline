@@ -10,7 +10,7 @@ Before you begin to develop your pipeline, set up the following prerequisites in
 
 ## Prerequisites
 
-- Install and set up Helm.
+- Install and set up helm.
 - Install Nginx Ingress Controller Git release nginx-0.22.0.
 
 ## Deploy the CI/CD pipeline
@@ -33,7 +33,7 @@ Before you begin to develop your pipeline, set up the following prerequisites in
     helm repo update
     ```
 
-3. Install the pipeline Helm chart by pointing to the updated values.yaml file.
+3. Install the pipeline helm chart by pointing to the updated values.yaml file.
 
     ```
     helm install --name <RELEASE_NAME> wso2/kubernetes-pipeline -f values-mgw.yaml --namespace <NAMESPACE>
@@ -52,7 +52,7 @@ Before you begin to develop your pipeline, set up the following prerequisites in
     jenkins-ingress                 jenkins         <EXTERNAL_IP>       80, 443     20m
     ```
 
-5. Add the above hosts as an entry in /etc/hosts as follows:
+5. Add the above hosts as an entry in `/etc/hosts` as follows:
     ```
     <EXTERNAL_IP>  grafana kibana spinnaker jenkins
     ```

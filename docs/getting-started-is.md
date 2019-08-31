@@ -10,7 +10,7 @@ Before you begin to develop your pipeline, set up the following prerequisites in
 
 ## Prerequisites
 
-- Install and set up Helm.
+- Install and set up helm.
 - Install Nginx Ingress Controller Git release nginx-0.22.0.
 
 
@@ -37,7 +37,7 @@ After creating the repository, pull the latest image from WSO2 and push it to th
     docker tag wso2/wso2is:5.8.0<DOCKER_ORGANIZATION>/wso2is
     ```
 
-> The WSO2 Identity and Access Management Docker image automatically fetches product updates on a weekly basis. If you do not have a WSO2 subscription account, you can sign up for a free trial here.
+> The WSO2 Identity and Access Management Docker image automatically fetches product updates on a weekly basis. If you do not have a WSO2 subscription account, you can sign up for a free trial [here](https://wso2.com/subscription).
 
 Then, log into your organization on Docker Hub and push the Enterprise Integrator image.
 
@@ -66,7 +66,7 @@ docker push <DOCKER_ORGANIZATION>/wso2is
     helm repo update
     ```
 
-3. Install the pipeline Helm chart by pointing to the updated values.yaml file.
+3. Install the pipeline helm chart by pointing to the updated values.yaml file.
 
     ```
     helm install --name <RELEASE_NAME> wso2/kubernetes-pipeline -f values-is-pattern-1.yaml --namespace <NAMESPACE>
@@ -85,7 +85,7 @@ docker push <DOCKER_ORGANIZATION>/wso2is
     jenkins-ingress                 jenkins         <EXTERNAL_IP>       80, 443     20m
     ```
 
-5. Add the above hosts as an entry in /etc/hosts as follows:
+5. Add the above hosts as an entry in `/etc/hosts` as follows:
     ```
     <EXTERNAL_IP>  grafana kibana spinnaker jenkins
     ```
