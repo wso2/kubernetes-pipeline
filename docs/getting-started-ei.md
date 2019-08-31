@@ -78,12 +78,12 @@ docker push <DOCKER_ORGANIZATION>/wso2ei-integrator
     kubectl get ing -n <NAMESPACE>
     ```
     ```
-    NAME               				HOSTS        	 ADDRESS      		PORTS 	    AGE
-    <RELEASE_NAME>-grafana      	grafana      	 <EXTERNAL_IP>   	80    		20m
-    <RELEASE_NAME>-kibana       	kibana       	 <EXTERNAL_IP>   	80    		20m
-    <RELEASE_NAME>-spinnaker-deck   spinnaker    	 <EXTERNAL_IP>   	80, 443   	20m
-    <RELEASE_NAME>-spinnaker-gate   gate.spinnaker   <EXTERNAL_IP>   	80, 443   	20m
-    jenkins-ingress    			    jenkins      	 <EXTERNAL_IP>   	80, 443   	20m
+    NAME                            HOSTS            ADDRESS            PORTS       AGE
+    <RELEASE_NAME>-grafana          grafana         <EXTERNAL_IP>       80          20m
+    <RELEASE_NAME>-kibana           kibana          <EXTERNAL_IP>       80          20m
+    <RELEASE_NAME>-spinnaker-deck   spinnaker       <EXTERNAL_IP>       80, 443     20m
+    <RELEASE_NAME>-spinnaker-gate   gate.spinnaker  <EXTERNAL_IP>       80, 443     20m
+    jenkins-ingress                 jenkins         <EXTERNAL_IP>       80, 443     20m
     ```
 
 5. Add the above hosts as an entry in /etc/hosts as follows:
