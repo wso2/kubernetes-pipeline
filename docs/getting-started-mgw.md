@@ -10,7 +10,7 @@ Before you begin to develop your pipeline, set up the following prerequisites in
 
 ## Prerequisites
 
-- Install and set up helm.
+- Install and set up Helm.
 - Install Nginx Ingress Controller Git release nginx-0.22.0.
 
 ## Deploy the CI/CD pipeline
@@ -26,7 +26,7 @@ Before you begin to develop your pipeline, set up the following prerequisites in
     - <GITHUB_USERNAME>
     - <GITHUB_PASSWORD>
 
-2. Add the WSO2 helm repository.
+2. Add the WSO2 Helm repository.
 
     ```
     helm repo add wso2 https://helm.wso2.com

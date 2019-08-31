@@ -17,7 +17,7 @@ github:
   username: <GITHUB_USERNAME>
   password: <GITHUB_PASSWORD>
 
-# Credentials to access the private dockerhub registry
+# Credentials to access the private Dockerhub registry
 registry:
   server: 'https://index.docker.io/v1/'
   username: <REGISTRY_USERNAME>
