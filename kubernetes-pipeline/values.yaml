@@ -92,17 +92,13 @@ elasticsearch:
   esJavaOpts: -Xms512m -Xmx512m
 
 prometheus-operator:
-  prometheus-node-exporter:
-    service:
-      port: 30206
-      targetPort: 30206
   kubeEtcd: # Disable Etcd metrics
     enabled: false
   kubeControllerManager: #Disble KubeController Metrics
     enabled: false
   kubeScheduler: # Disable Scheduler metrics
     enabled: false
-  alertmanager:
+  alertmanager:  # Disable Alert Manager
     enabled: false
   kubeApiServer:
     enabled: false
@@ -110,8 +106,6 @@ prometheus-operator:
     enabled: false
   kubeProxy:
     enabeld: false
-  nodeExporter:
-    enabled: false
   prometheus:
     prometheusSpec:
       image:
@@ -126,6 +120,11 @@ prometheus-operator:
         kubernetes.io/ingress.class: nginx
       hosts:
         - grafana
+
+nodeExporter:
+  enabled: false
+kubeStateMetrics:
+    enabled: false
 
 prometheus-blackbox-exporter:
   serviceMonitor:
