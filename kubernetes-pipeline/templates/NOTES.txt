@@ -6,17 +6,19 @@ Please follow these steps to access the pipeline tools in the environment.
 
   kubectl get ing -n {{ .Release.Namespace }}
 
-    NAME               				HOSTS        	ADDRESS      		PORTS 	AGE
-    <RELEASE_NAME>-grafana      	grafana      	<EXTERNAL_IP>   	80    		20m
-    <RELEASE_NAME>-kibana       	kibana       	<EXTERNAL_IP>   	80    		20m
-    <RELEASE_NAME>-spinnaker-deck   spinnaker    	<EXTERNAL_IP>   	80, 443   	20m
-    <RELEASE_NAME>-spinnaker-gate   gate.spinnaker  <EXTERNAL_IP>   	80, 443   	20m
-    jenkins-ingress    			    jenkins      	<EXTERNAL_IP>   	80, 443   	20m
+    NAME                                  HOSTS           ADDRESS           PORTS       AGE
+    <RELEASE_NAME>-grafana                grafana         <EXTERNAL_IP>     80          20m
+    <RELEASE_NAME>-kibana                 kibana          <EXTERNAL_IP>     80          20m
+    <RELEASE_NAME>-spinnaker-deck         spinnaker       <EXTERNAL_IP>     80, 443     20m
+    <RELEASE_NAME>-spinnaker-gate         gate.spinnaker  <EXTERNAL_IP>     80, 443     20m
+    jenkins-ingress                       jenkins         <EXTERNAL_IP>     80, 443     20m
 
 2. Add the above host as an entry in /etc/hosts file as follows:
 
     <EXTERNAL-IP> grafana kibana spinnaker gate.spinnaker jenkins
 
-3. Navigate to the following URLs on any web browser:
+3. Navigate to the following URLs on any web browser to access the pipeline tools
     - https://jenkins
     - https://spinnaker
+    - https://kibana
+    - https://grafana
