@@ -51,6 +51,7 @@ applications:
     images:
       - organization: <REGISTRY_USERNAME>
         repository: petstore
+        deployment: wso2microgw
         microgateway:
           gitRepository: 'https://github.com/wso2-incubator/microgateway-petstore'
           deploymentConfigPath: conf/deployment-config.toml
