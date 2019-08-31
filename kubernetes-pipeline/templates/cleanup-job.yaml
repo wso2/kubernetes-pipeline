@@ -26,7 +26,7 @@ spec:
       serviceAccountName: jenkins
       containers:
       - name: cleanup-kubernetes-artifacts
-        image: lachlanevenson/k8s-kubectl
+        image: wso2/kubernetes-pipeline-k8s-kubectl
         command: ["/bin/sh"]
         args: ["-c", "sh /cleanup/run.sh"]
         volumeMounts: 
