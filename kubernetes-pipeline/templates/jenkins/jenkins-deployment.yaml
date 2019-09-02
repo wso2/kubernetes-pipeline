@@ -21,11 +21,13 @@ metadata:
 spec:
   strategy:
     type: RollingUpdate
+  selector:
+    matchLabels:
+      app: jenkins
   template:
     metadata:
       labels:
         app: jenkins
-        tier: jenkins
     spec:
       serviceAccountName: jenkins
       initContainers:
