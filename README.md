@@ -1,29 +1,31 @@
 # Helm Resources for WSO2 Kubernetes Pipeline
+
 *Helm Resources for container-based deployments of WSO2 Kubernetes Pipeline for WSO2 products*
 
 ## Overview
-WSO2 Kubernetes pipeline provides tools and preconfigured pipelines used for continuous integration and deployment. The setup is deployed on top of Kubernetes using Helm, which makes the processes of configuring, installing, scaling and upgrading simple.
 
-Following are the tools used to install and monitor the pipeline
-- Jenkins: Continous integration
-- Spinnaker: Continous deployment to Kubernetes
-- ELK: Centralized logging
-- Prometheus-operator: Monitoring deployments and visualization using grafana
+- WSO2 Kubernetes Pipeline provides tools and a preconfigured pipeline used for continuous integration and deployment.
+The setup is deployed on top of Kubernetes using Helm, which makes the processes of configuring, installing, scaling and upgrading, quite simple.
 
+- Following are the tools used to install and monitor the pipeline
+
+  - Jenkins: For continuous integration
+  - Spinnaker: For continuous deployment to Kubernetes
+  - ELK: For centralized logging
+  - Prometheus Operator: For monitoring deployments and visualization using Grafana
 
 ![Architecture Diagram](pipeline_architecture.jpg)
 
-## Installation
+### Installation
 
-Use the following getting started guides to install Kubernetes pipelines for the resepective WSO2 product.
+Use the following, **Getting Started** guides to install the Kubernetes Pipeline, for the respective WSO2 product.
 
-* [Getting started with WSO2 Enterprise Integrator](docs/getting-started-ei.md)
-* [Getting started with WSO2 Identity and Access Management](docs/getting-started-is.md)
-* [Getting started with WSO2 API Microgateway](docs/getting-started-mgw.md)
+* [Getting Started with Kubernetes Pipeline for WSO2 Enterprise Integration](docs/getting-started-ei.md)
 
-## Contact us
+* [Getting Started with Kubernetes Pipeline for WSO2 Identity and Access Management](docs/getting-started-is.md)
 
-WSO2 developers can be contacted via the following mailing lists:
+* [Getting Started with Kubernetes Pipeline for WSO2 API Management](docs/getting-started-mgw.md)
 
-* WSO2 Developers Mailing List : [dev@wso2.org](mailto:dev@wso2.org)
-* WSO2 Architecture Mailing List : [architecture@wso2.org](mailto:architecture@wso2.org)
+## How You Can Contribute
+
+For detailed information on how you can contribute to this Git repository, please refer [this](CONTRIBUTING.md) documentation.
