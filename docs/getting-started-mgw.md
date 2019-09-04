@@ -1,19 +1,22 @@
-# Getting Started - WSO2 API Microgateway
+## Getting Started with Kubernetes Pipeline for WSO2 API Management
 
 Setting up a basic pipeline for WSO2 API Microgateway on Kubernetes is quick and simple.
 
 You can set up a simple CI/CD pipeline for WSO2 API Microgateway in two steps.
-- Create a Docker image for WSO2 API Microgateway.
-- Deploy the CI/CD pipeline.
+
+  - Create a Docker image for WSO2 API Microgateway.
+
+  - Deploy the CI/CD pipeline.
 
 Before you begin to develop your pipeline, set up the following prerequisites in your Kubernetes cluster.
 
-## Prerequisites
+### Prerequisites
 
-- Install and set up Helm.
-- Install Nginx Ingress Controller Git release nginx-0.22.0.
+  - Install and set up Helm.
 
-## Deploy the CI/CD pipeline
+  - Install NGINX Ingress Controller Git release tag `nginx-0.22.0`.
+
+### Deploy the CI/CD pipeline
 
 1. Download the [sample values.yaml](../samples/values-mgw.yaml) file and replace the placeholders with their respective values.
 
@@ -33,7 +36,7 @@ Before you begin to develop your pipeline, set up the following prerequisites in
     helm repo update
     ```
 
-3. Install the pipeline helm chart by pointing to the updated values.yaml file.
+3. Install the pipeline Helm Chart by pointing to the updated `values.yaml` file.
 
     ```
     helm install --name <RELEASE_NAME> wso2/kubernetes-pipeline -f values-mgw.yaml --namespace <NAMESPACE>
@@ -53,11 +56,13 @@ Before you begin to develop your pipeline, set up the following prerequisites in
     ```
 
 5. Add the above hosts as an entry in `/etc/hosts` as follows:
+
     ```
     <EXTERNAL_IP>  grafana kibana spinnaker jenkins
     ```
 
 6. Navigate to the following URLs on any web browser:
+
     - https://jenkins
     - https://spinnaker
     - https://grafana
