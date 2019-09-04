@@ -182,7 +182,9 @@ data:
             }
             steps {
               shell("""
-                TIMESTAMP=`date +\"%Y%m%d%H%M%S\"`
+                timestamp() {
+                  date +\"%Y%m%d%H%M%S\"
+                }
 
                 TAG=`cat {{ $image.microgateway.projectName }}/conf/deployment-config.toml | grep "tag" | awk '{print \\\$3}' | sed "s/'//g"`
 
@@ -192,14 +194,21 @@ data:
 
                 docker login -u \$REGISTRY_USERNAME -p \$REGISTRY_PASSWORD
 
+                REGISTRY_INFO=\$(grep 'registry' {{ $image.microgateway.projectName }}/conf/deployment-config.toml | awk -F"'" '{print \$2}')
+                REGISTRY=\$(echo \$REGISTRY_INFO | cut -d "/" -f1)
+                ORGANIZATION=\$(echo \$REGISTRY_INFO | cut -d "/" -f2)
+
+                USER_REPO_TAG=\$TAG-`timestamp`
+                docker tag \$REGISTRY/\$ORGANIZATION/{{ $image.repository }}:\$TAG {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }}:\$USER_REPO_TAG
+
                 # Push latest tag if it does not exist
                 if ! docker pull {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }}; 
                 then 
-                  docker tag {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }}:\$TAG {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
+                  docker tag \$REGISTRY/\$ORGANIZATION/{{ $image.repository }}:\$TAG {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
                   docker push {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
                 fi
 
-                docker push {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }}:\$TAG
+                docker push {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }}:\$USER_REPO_TAG
               """)
             }
           }
