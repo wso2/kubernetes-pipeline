@@ -41,7 +41,7 @@ After creating the repository, pull the latest image from WSO2 and push it to th
     ```
 
 > The WSO2 Enterprise Integration Docker image automatically fetches product updates on a weekly basis.
-If you do not have a WSO2 Subscription account, you can sign up for a Free Trial Subscription [here](https://wso2.com/subscription).
+If you do not have a WSO2 Subscription account, you can sign up for a Free Trial Subscription [here](https://wso2.com/subscription/free-trial).
 
 Then, log into your organization on Docker Hub and push the Enterprise Integrator image.
 
