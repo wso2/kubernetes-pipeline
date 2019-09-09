@@ -91,12 +91,8 @@ data:
                 docker build -t \$IMAGE_NAME .
                 docker login -u \$REGISTRY_USERNAME -p \$REGISTRY_PASSWORD
 
-                # Push latest tag if it does not exist
-                if ! docker pull {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }}; 
-                then 
-                  docker tag {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }}:\$TAG {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
-                  docker push {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
-                fi
+                docker tag {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }}:\$TAG {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
+                docker push {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
 
                 docker push \$IMAGE_NAME""")
             }
@@ -144,12 +140,8 @@ data:
                 docker build -t {{ $image.organization }}/{{ $image.repository }}:\$TAG .
                 docker login -u \$REGISTRY_USERNAME -p \$REGISTRY_PASSWORD
 
-                # Push latest tag if it does not exist
-                if ! docker pull {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }}; 
-                then 
-                  docker tag {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }}:\$TAG {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
-                  docker push {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
-                fi
+                docker tag {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }}:\$TAG {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
+                docker push {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
 
                 docker push {{ $image.organization }}/{{ $image.repository }}:\$TAG""")
             }
