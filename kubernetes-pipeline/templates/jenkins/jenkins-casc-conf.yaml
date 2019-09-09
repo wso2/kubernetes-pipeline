@@ -91,7 +91,7 @@ data:
                 docker build -t \$IMAGE_NAME .
                 docker login -u \$REGISTRY_USERNAME -p \$REGISTRY_PASSWORD
 
-                docker tag {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }}:\$TAG {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
+                docker tag \$IMAGE_NAME {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
                 docker push {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
 
                 docker push \$IMAGE_NAME""")
@@ -283,7 +283,11 @@ data:
 
               echo '{"artifacts": [ {"type": "embedded/base64","name": "'"\$CHART_NAME"'", "reference": "'"\$CHART_CONTENT"'" }, {"type": "embedded/base64","name": "values-dev.yaml","reference": "'"\$VALUES_DEV_CONTENT"'" }, {"type": "embedded/base64","name": "values-prod.yaml","reference": "'"\$VALUES_PROD_CONTENT"'" }, {"type": "embedded/base64","name": "values-staging.yaml","reference": "'"\$VALUES_STAGING_CONTENT"'" } ]}' > data.json
 
-              curl -X POST --header "Content-Type: application/json" --request POST --data @data.json http://spin-gate.{{ $namespace }}.svc.cluster.local:8084/webhooks/webhook/chart
+              APP_ENDPOINT=http://spin-gate.{{ $namespace }}.svc.cluster.local:8084/applications/{{ .name }}
+              while [ "\$(curl -s -o /dev/null -w ''%{http_code}'' \$APP_ENDPOINT)" != "200" ]; do sleep 60; done
+
+              WEBHOOK_ENDPOINT=http://spin-gate.{{ $namespace }}.svc.cluster.local:8084/webhooks/webhook/chart
+              while [ "\$(curl -s -o /dev/null -w ''%{http_code}'' -X POST --header "Content-Type: application/json" --request POST --data @data.json \$WEBHOOK_ENDPOINT)" != "200" ]; do sleep 60; done
               """)
 
             }
