@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - Adding a missing selector in the Kubernetes Deployment specification for `v1`
 
-## [v2.6.0.1] - 2019-08-31
+## [v0.1.0] - 2019-08-31
 
 ### Added
 
