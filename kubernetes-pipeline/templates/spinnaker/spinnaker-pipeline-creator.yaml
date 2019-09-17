@@ -66,811 +66,814 @@ data:
     spin applications save spintest --file {{ .name }}.json --gate-endpoint $SPINNAKER_API && \
 
     spin pipeline save -f {{ .name }}-deploy-production.json --gate-endpoint $SPINNAKER_API && \
-    id=`spin pipelines get --application {{ .name }} --name "Deploy Production" --output=jsonpath={.id} --gate-endpoint $SPINNAKER_API` && \
-
-    sed "s|<DEPLOY_PRODUCTION_ID>|$id|" {{ .name }}-deploy-staging.json > ../{{ .name }}-deploy-staging.json && \
-    spin pipeline save -f ../{{ .name }}-deploy-staging.json --gate-endpoint $SPINNAKER_API && \
-    id=`spin pipelines get --application {{ .name }} --name "Deploy Staging" --output=jsonpath={.id} --gate-endpoint $SPINNAKER_API` && \
-
-    sed "s|<DEPLOY_STAGING_ID>|$id|" {{ .name }}-deploy-dev.json > ../{{ .name }}-deploy-dev.json && \
-    spin pipeline save -f ../{{ .name }}-deploy-dev.json --gate-endpoint $SPINNAKER_API && \
-    id=`spin pipelines get --application {{ .name }} --name "Deploy Dev" --output=jsonpath={.id} --gate-endpoint $SPINNAKER_API` && \
-
-    sed "s|<DEPLOY_DEV_ID>|$id|" {{ .name }}-bake-artifacts.json > ../{{ .name }}-bake-artifacts.json && \
-    spin pipeline save -f ../{{ .name }}-bake-artifacts.json --gate-endpoint $SPINNAKER_API
+    spin pipeline save -f {{ .name }}-deploy-staging.json --gate-endpoint $SPINNAKER_API && \
+    spin pipeline save -f {{ .name }}-deploy-dev.json --gate-endpoint $SPINNAKER_API && \
+    spin pipeline save -f {{ .name }}-bake-artifacts.json --gate-endpoint $SPINNAKER_API
     {{- end }}
   {{- range .Values.applications }}
   {{- $application := . }}
   {{ .name }}.json: |-
     {
-      "cloudProviders": "kubernetes",
-      "email": "{{ .email }}",
-      "lastModifiedBy": "anonymous",
-      "name": "{{ .name }}",
-      "trafficGuards": [],
-      "user": "[anonymous]"
+        "cloudProviders": "kubernetes",
+        "email": "{{ .email }}",
+        "lastModifiedBy": "anonymous",
+        "name": "{{ .name }}",
+        "trafficGuards": [],
+        "user": "[anonymous]"
     }
 
   {{ .name }}-bake-artifacts.json: |-
     {
-      "application": "{{ .name }}",
-      "name": "Bake Manifests",
-      "expectedArtifacts": [
-          {
-              "defaultArtifact": {
-                  "customKind": true,
-                  "id": "56330e63-2a3a-4979-a432-043e0c653685"
-              },
-              "displayName": "chart",
-              "id": "4397cbfc-50f8-4244-b721-2a35d8e04715",
-              "matchArtifact": {
-                  "id": "7f76f43f-37fd-4410-81f2-c1acd4cf8422",
-                  "name": "{{ .chart.name }}-.*\\.tgz",
-                  "type": "embedded/base64"
-              },
-              "useDefaultArtifact": false,
-              "usePriorArtifact": true
-          },
-          {
-              "defaultArtifact": {
-                  "customKind": true,
-                  "id": "1db24043-0cd0-4511-b645-e4fa7f52a689"
-              },
-              "displayName": "values-dev.yaml",
-              "id": "aec2c4f1-2cb2-4d50-962a-dedc2a7457e0",
-              "matchArtifact": {
-                  "id": "d98b429d-0a8e-4c3e-87d1-d57974f0c6ae",
-                  "name": "values-dev.yaml",
-                  "type": "embedded/base64"
-              },
-              "useDefaultArtifact": false,
-              "usePriorArtifact": true
-          },
-          {
-              "defaultArtifact": {
-                  "customKind": true,
-                  "id": "6525a786-41fc-448b-b675-9e0386007d95"
-              },
-              "displayName": "values-staging.yaml",
-              "id": "d08add4b-ccdb-49fd-bc79-299bb47ddc10",
-              "matchArtifact": {
-                  "id": "853945fb-a1f7-46a3-9707-8feb76ed01c9",
-                  "name": "values-staging.yaml",
-                  "type": "embedded/base64"
-              },
-              "useDefaultArtifact": false,
-              "usePriorArtifact": true
-          },
-          {
-              "defaultArtifact": {
-                  "customKind": true,
-                  "id": "3b6e0f4b-df2f-4434-a081-b000c0b08c00"
-              },
-              "displayName": "values-prod.yaml",
-              "id": "14234aae-38d8-424b-9d11-76cbade0e194",
-              "matchArtifact": {
-                  "id": "c2ec0634-256c-4ab9-8f81-f1d67ebf6280",
-                  "name": "values-prod.yaml",
-                  "type": "embedded/base64"
-              },
-              "useDefaultArtifact": false,
-              "usePriorArtifact": true
-          }
-        {{- range $index, $image := .images }}
-        {{- $imageName := printf "%s/%s/%s" $root.Values.registry.address $image.organization $image.repository }}
-          ,{
-              "defaultArtifact": {
-                  "id": "beebe844-426d-46ee-9a9f-b13eeb251717",
-                  "name": "{{- $imageName}}",
-                  "reference": "{{- $imageName}}",
-                  "type": "docker/image"
-              },
-              "displayName": "{{- $imageName}}",
-              "id": "{{ $index }}",
-              "matchArtifact": {
-                  "id": "a8417d7f-2fa1-4d7b-a06b-e9610d5604fa",
-                  "name": "{{- $imageName}}",
-                  "type": "docker/image"
-              },
-              "useDefaultArtifact": true,
-              "usePriorArtifact": true
-          }
-        {{- end }}
-      ],
-      "keepWaitingPipelines": false,
-      "lastModifiedBy": "anonymous",
-      "limitConcurrent": true,
-      "stages": [
-          {
-              "evaluateOverrideExpressions": false,
-              "expectedArtifacts": [
-                  {
-                      "defaultArtifact": {},
-                      "displayName": "dev-chart",
-                      "id": "226a10b2-fa11-4ac0-813e-a4556d574721",
-                      "matchArtifact": {
-                          "kind": "base64",
-                          "name": "dev-chart",
-                          "type": "embedded/base64"
-                      },
-                      "useDefaultArtifact": false
-                  }
-              ],
-              "inputArtifacts": [
-                  {
-                      "account": "embedded-artifact",
-                      "id": "4397cbfc-50f8-4244-b721-2a35d8e04715"
-                  },
-                  {
-                      "account": "embedded-artifact",
-                      "id": "aec2c4f1-2cb2-4d50-962a-dedc2a7457e0"
-                  }
-              ],
-              "name": "Bake (Manifest) Dev",
-              "namespace": "{{ .name }}-dev",
-              "outputName": "{{ .name }}-dev",
-              "overrides": {
-                  {{- range $index, $image := .images }}
-                  {{- $imageOrganization := printf "%s/%s" $root.Values.registry.address $image.organization }}
-                  "wso2.deployment.{{ $image.deployment }}.dockerRegistry": "{{ $imageOrganization }}",
-                  "wso2.deployment.{{ $image.deployment }}.imageName": "{{ $image.repository }}",
-                  "wso2.deployment.{{ $image.deployment }}.imageTag": "",
-                  "wso2.deployment.{{ $image.deployment }}.imagePullSecrets": "regcred",
-                  {{- if $image.microgateway }}
-                  "wso2.deployment.wso2microgw.projectName": "{{ $image.microgateway.projectName }}",
-                  {{- end }}
-                  {{- end }}
-                  "wso2.subscription.username": "{{ $root.Values.wso2Username }}",
-                  "wso2.subscription.password": "{{ $root.Values.wso2Password }}",
-                  "wso2.centralizedLogging.enabled": "true",
-                  "wso2.centralizedLogging.logstash.elasticsearch.host": "wso2-elasticsearch-master.{{ $release.Namespace }}.svc.cluster.local",
-                  "wso2.monitoring.enabled": "true",
-                  "wso2.monitoring.prometheus.serviceMonitor.labels.release": "{{ $root.Release.Name }}",
-                  "wso2.monitoring.prometheus.serviceMonitor.blackBoxNamespace": "{{ $root.Release.Namespace }}",
-                  "wso2.monitoring.prometheus.jmxJobName": "jmx"
-              },
-              "refId": "1",
-              "requisiteStageRefIds": [],
-              "templateRenderer": "HELM2",
-              "type": "bakeManifest"
-          },
-          {
-              "evaluateOverrideExpressions": false,
-              "expectedArtifacts": [
-                  {
-                      "defaultArtifact": {},
-                      "displayName": "production-chart",
-                      "id": "c5dfdee9-9b49-40a1-a241-9bb48a1284aa",
-                      "matchArtifact": {
-                          "kind": "base64",
-                          "name": "production-chart",
-                          "type": "embedded/base64"
-                      },
-                      "useDefaultArtifact": false
-                  }
-              ],
-              "inputArtifacts": [
-                  {
-                      "account": "embedded-artifact",
-                      "id": "4397cbfc-50f8-4244-b721-2a35d8e04715"
-                  },
-                  {
-                      "account": "embedded-artifact",
-                      "id": "14234aae-38d8-424b-9d11-76cbade0e194"
-                  }
-              ],
-              "name": "Bake (Manifest) Prod",
-              "namespace": "{{ .name }}-prod",
-              "outputName": "{{ .name }}-prod",
-              "overrides": {
-                  {{- range $index, $image := .images }}
-                  {{- $imageOrganization := printf "%s/%s" $root.Values.registry.address $image.organization }}
-                  "wso2.deployment.{{ $image.deployment }}.dockerRegistry": "{{ $imageOrganization }}",
-                  "wso2.deployment.{{ $image.deployment }}.imageName": "{{ $image.repository }}",
-                  "wso2.deployment.{{ $image.deployment }}.imageTag": "",
-                  "wso2.deployment.{{ $image.deployment }}.imagePullSecrets": "regcred",
-                  {{- if $image.microgateway }}
-                  "wso2.deployment.wso2microgw.projectName": "{{ $image.microgateway.projectName }}",
-                  {{- end }}
-                  {{- end }}
-                  "wso2.subscription.username": "{{ $root.Values.wso2Username }}",
-                  "wso2.subscription.password": "{{ $root.Values.wso2Password }}",
-                  "wso2.centralizedLogging.enabled": "true",
-                  "wso2.centralizedLogging.logstash.elasticsearch.host": "wso2-elasticsearch-master.{{ $release.Namespace }}.svc.cluster.local",
-                  "wso2.monitoring.enabled": "true",
-                  "wso2.monitoring.prometheus.serviceMonitor.labels.release": "{{ $root.Release.Name }}",
-                  "wso2.monitoring.prometheus.serviceMonitor.blackBoxNamespace": "{{ $root.Release.Namespace }}",
-                  "wso2.monitoring.prometheus.jmxJobName": "jmx"
-              },
-              "refId": "3",
-              "requisiteStageRefIds": [],
-              "templateRenderer": "HELM2",
-              "type": "bakeManifest"
-          },
-          {
-              "evaluateOverrideExpressions": false,
-              "expectedArtifacts": [
-                  {
-                      "defaultArtifact": {},
-                      "displayName": "staging-chart",
-                      "id": "8146fe52-8dd8-4a6b-bf04-c3ee66f63193",
-                      "matchArtifact": {
-                          "kind": "base64",
-                          "name": "staging-chart",
-                          "type": "embedded/base64"
-                      },
-                      "useDefaultArtifact": false
-                  }
-              ],
-              "inputArtifacts": [
-                  {
-                      "account": "embedded-artifact",
-                      "id": "4397cbfc-50f8-4244-b721-2a35d8e04715"
-                  },
-                  {
-                      "account": "embedded-artifact",
-                      "id": "d08add4b-ccdb-49fd-bc79-299bb47ddc10"
-                  }
-              ],
-              "name": "Bake (Manifest) Staging",
-              "namespace": "{{ .name }}-staging",
-              "outputName": "{{ .name }}-staging",
-              "overrides": {
-                  {{- range $index, $image := .images }}
-                  {{- $imageOrganization := printf "%s/%s" $root.Values.registry.address $image.organization }}
-                  "wso2.deployment.{{ $image.deployment }}.dockerRegistry": "{{ $imageOrganization }}",
-                  "wso2.deployment.{{ $image.deployment }}.imageName": "{{ $image.repository }}",
-                  "wso2.deployment.{{ $image.deployment }}.imageTag": "",
-                  "wso2.deployment.{{ $image.deployment }}.imagePullSecrets": "regcred",
-                  {{- if $image.microgateway }}
-                  "wso2.deployment.wso2microgw.projectName": "{{ $image.microgateway.projectName }}",
-                  {{- end }}
-                  {{- end }}
-                  "wso2.subscription.username": "{{ $root.Values.wso2Username }}",
-                  "wso2.subscription.password": "{{ $root.Values.wso2Password }}",
-                  "wso2.centralizedLogging.enabled": "true",
-                  "wso2.centralizedLogging.logstash.elasticsearch.host": "wso2-elasticsearch-master.{{ $release.Namespace }}.svc.cluster.local",
-                  "wso2.monitoring.enabled": "true",
-                  "wso2.monitoring.prometheus.serviceMonitor.labels.release": "{{ $root.Release.Name }}",
-                  "wso2.monitoring.prometheus.serviceMonitor.blackBoxNamespace": "{{ $root.Release.Namespace }}",
-                  "wso2.monitoring.prometheus.jmxJobName": "jmx"
-              },
-              "refId": "8",
-              "requisiteStageRefIds": [],
-              "templateRenderer": "HELM2",
-              "type": "bakeManifest"
-          },
-          {
-              "application": "{{ .name }}",
-              "failPipeline": true,
-              "name": "Pipeline",
-              "pipeline": "<DEPLOY_DEV_ID>",
-              "refId": "7",
-              "requisiteStageRefIds": [
-                  "1",
-                  "3",
-                  "8"
-              ],
-              "type": "pipeline",
-              "waitForCompletion": false
-          }
-      ],
-      "triggers": [
-          {
-              "enabled": true,
-              "expectedArtifactIds": [
-                  "4397cbfc-50f8-4244-b721-2a35d8e04715",
-                  "aec2c4f1-2cb2-4d50-962a-dedc2a7457e0",
-                  "14234aae-38d8-424b-9d11-76cbade0e194"
-              ],
-              "payloadConstraints": {},
-              "source": "chart",
-              "type": "webhook"
-          }
-          {{- range $index, $image := .images }}
+        "application": "{{ .name }}",
+        "name": "Bake Manifests",
+        "keepWaitingPipelines": false,
+        "limitConcurrent": true,
+        "id": "{{ .name }}-bake-artifacts",
+        "expectedArtifacts": [
+            {
+                "defaultArtifact": {
+                    "customKind": true,
+                    "id": "56330e63-2a3a-4979-a432-043e0c653685"
+                },
+                "displayName": "chart",
+                "id": "4397cbfc-50f8-4244-b721-2a35d8e04715",
+                "matchArtifact": {
+                    "id": "7f76f43f-37fd-4410-81f2-c1acd4cf8422",
+                    "name": "{{ .chart.name }}-.*\\.tgz",
+                    "type": "embedded/base64"
+                },
+                "useDefaultArtifact": false,
+                "usePriorArtifact": true
+            },
+            {
+                "defaultArtifact": {
+                    "customKind": true,
+                    "id": "1db24043-0cd0-4511-b645-e4fa7f52a689"
+                },
+                "displayName": "values-dev.yaml",
+                "id": "aec2c4f1-2cb2-4d50-962a-dedc2a7457e0",
+                "matchArtifact": {
+                    "id": "d98b429d-0a8e-4c3e-87d1-d57974f0c6ae",
+                    "name": "values-dev.yaml",
+                    "type": "embedded/base64"
+                },
+                "useDefaultArtifact": false,
+                "usePriorArtifact": true
+            },
+            {
+                "defaultArtifact": {
+                    "customKind": true,
+                    "id": "6525a786-41fc-448b-b675-9e0386007d95"
+                },
+                "displayName": "values-staging.yaml",
+                "id": "d08add4b-ccdb-49fd-bc79-299bb47ddc10",
+                "matchArtifact": {
+                    "id": "853945fb-a1f7-46a3-9707-8feb76ed01c9",
+                    "name": "values-staging.yaml",
+                    "type": "embedded/base64"
+                },
+                "useDefaultArtifact": false,
+                "usePriorArtifact": true
+            },
+            {
+                "defaultArtifact": {
+                    "customKind": true,
+                    "id": "3b6e0f4b-df2f-4434-a081-b000c0b08c00"
+                },
+                "displayName": "values-prod.yaml",
+                "id": "14234aae-38d8-424b-9d11-76cbade0e194",
+                "matchArtifact": {
+                    "id": "c2ec0634-256c-4ab9-8f81-f1d67ebf6280",
+                    "name": "values-prod.yaml",
+                    "type": "embedded/base64"
+                },
+                "useDefaultArtifact": false,
+                "usePriorArtifact": true
+            }
+            {{- range $index, $image := .images }}
             {{- $imageName := printf "%s/%s/%s" $root.Values.registry.address $image.organization $image.repository }}
-          ,{
-              "account": "dockerhub",
-              "enabled": true,
-              "expectedArtifactIds": [
-                  "{{- $index }}"
-              ],
-              "organization": "{{ $image.organization }}",
-              "registry": "{{ $root.Values.registry.address }}",
-              "repository": "{{ $image.organization }}/{{ $image.repository }}",
-              "type": "docker"
-          }
-          {{- end }}
-      ],
-      "updateTs": "1558523410000"
+            ,{
+                "defaultArtifact": {
+                    "id": "beebe844-426d-46ee-9a9f-b13eeb251717",
+                    "name": "{{- $imageName}}",
+                    "reference": "{{- $imageName}}",
+                    "type": "docker/image"
+                },
+                "displayName": "{{- $imageName}}",
+                "id": "{{ $index }}",
+                "matchArtifact": {
+                    "id": "a8417d7f-2fa1-4d7b-a06b-e9610d5604fa",
+                    "name": "{{- $imageName}}",
+                    "type": "docker/image"
+                },
+                "useDefaultArtifact": true,
+                "usePriorArtifact": true
+            }
+            {{- end }}
+        ],
+        "stages": [
+            {
+                "evaluateOverrideExpressions": false,
+                "expectedArtifacts": [
+                    {
+                        "defaultArtifact": {},
+                        "displayName": "dev-chart",
+                        "id": "226a10b2-fa11-4ac0-813e-a4556d574721",
+                        "matchArtifact": {
+                            "kind": "base64",
+                            "name": "dev-chart",
+                            "type": "embedded/base64"
+                        },
+                        "useDefaultArtifact": false
+                    }
+                ],
+                "inputArtifacts": [
+                    {
+                        "account": "embedded-artifact",
+                        "id": "4397cbfc-50f8-4244-b721-2a35d8e04715"
+                    },
+                    {
+                        "account": "embedded-artifact",
+                        "id": "aec2c4f1-2cb2-4d50-962a-dedc2a7457e0"
+                    }
+                ],
+                "name": "Bake (Manifest) Dev",
+                "namespace": "{{ .name }}-dev",
+                "outputName": "{{ .name }}-dev",
+                "overrides": {
+                    {{- range $index, $image := .images }}
+                    {{- $imageOrganization := printf "%s/%s" $root.Values.registry.address $image.organization }}
+                    "wso2.deployment.{{ $image.deployment }}.dockerRegistry": "{{ $imageOrganization }}",
+                    "wso2.deployment.{{ $image.deployment }}.imageName": "{{ $image.repository }}",
+                    "wso2.deployment.{{ $image.deployment }}.imageTag": "",
+                    "wso2.deployment.{{ $image.deployment }}.imagePullSecrets": "regcred",
+                    {{- if $image.microgateway }}
+                    "wso2.deployment.wso2microgw.projectName": "{{ $image.microgateway.projectName }}",
+                    {{- end }}
+                    {{- end }}
+                    "wso2.subscription.username": "{{ $root.Values.wso2Username }}",
+                    "wso2.subscription.password": "{{ $root.Values.wso2Password }}",
+                    "wso2.centralizedLogging.enabled": "true",
+                    "wso2.centralizedLogging.logstash.elasticsearch.host": "wso2-elasticsearch-master.{{ $release.Namespace }}.svc.cluster.local",
+                    "wso2.monitoring.enabled": "true",
+                    "wso2.monitoring.prometheus.serviceMonitor.labels.release": "{{ $root.Release.Name }}",
+                    "wso2.monitoring.prometheus.serviceMonitor.blackBoxNamespace": "{{ $root.Release.Namespace }}",
+                    "wso2.monitoring.prometheus.jmxJobName": "jmx"
+                },
+                "refId": "1",
+                "requisiteStageRefIds": [],
+                "templateRenderer": "HELM2",
+                "type": "bakeManifest"
+            },
+            {
+                "evaluateOverrideExpressions": false,
+                "expectedArtifacts": [
+                    {
+                        "defaultArtifact": {},
+                        "displayName": "production-chart",
+                        "id": "c5dfdee9-9b49-40a1-a241-9bb48a1284aa",
+                        "matchArtifact": {
+                            "kind": "base64",
+                            "name": "production-chart",
+                            "type": "embedded/base64"
+                        },
+                        "useDefaultArtifact": false
+                    }
+                ],
+                "inputArtifacts": [
+                    {
+                        "account": "embedded-artifact",
+                        "id": "4397cbfc-50f8-4244-b721-2a35d8e04715"
+                    },
+                    {
+                        "account": "embedded-artifact",
+                        "id": "14234aae-38d8-424b-9d11-76cbade0e194"
+                    }
+                ],
+                "name": "Bake (Manifest) Prod",
+                "namespace": "{{ .name }}-prod",
+                "outputName": "{{ .name }}-prod",
+                "overrides": {
+                    {{- range $index, $image := .images }}
+                    {{- $imageOrganization := printf "%s/%s" $root.Values.registry.address $image.organization }}
+                    "wso2.deployment.{{ $image.deployment }}.dockerRegistry": "{{ $imageOrganization }}",
+                    "wso2.deployment.{{ $image.deployment }}.imageName": "{{ $image.repository }}",
+                    "wso2.deployment.{{ $image.deployment }}.imageTag": "",
+                    "wso2.deployment.{{ $image.deployment }}.imagePullSecrets": "regcred",
+                    {{- if $image.microgateway }}
+                    "wso2.deployment.wso2microgw.projectName": "{{ $image.microgateway.projectName }}",
+                    {{- end }}
+                    {{- end }}
+                    "wso2.subscription.username": "{{ $root.Values.wso2Username }}",
+                    "wso2.subscription.password": "{{ $root.Values.wso2Password }}",
+                    "wso2.centralizedLogging.enabled": "true",
+                    "wso2.centralizedLogging.logstash.elasticsearch.host": "wso2-elasticsearch-master.{{ $release.Namespace }}.svc.cluster.local",
+                    "wso2.monitoring.enabled": "true",
+                    "wso2.monitoring.prometheus.serviceMonitor.labels.release": "{{ $root.Release.Name }}",
+                    "wso2.monitoring.prometheus.serviceMonitor.blackBoxNamespace": "{{ $root.Release.Namespace }}",
+                    "wso2.monitoring.prometheus.jmxJobName": "jmx"
+                },
+                "refId": "3",
+                "requisiteStageRefIds": [],
+                "templateRenderer": "HELM2",
+                "type": "bakeManifest"
+            },
+            {
+                "evaluateOverrideExpressions": false,
+                "expectedArtifacts": [
+                    {
+                        "defaultArtifact": {},
+                        "displayName": "staging-chart",
+                        "id": "8146fe52-8dd8-4a6b-bf04-c3ee66f63193",
+                        "matchArtifact": {
+                            "kind": "base64",
+                            "name": "staging-chart",
+                            "type": "embedded/base64"
+                        },
+                        "useDefaultArtifact": false
+                    }
+                ],
+                "inputArtifacts": [
+                    {
+                        "account": "embedded-artifact",
+                        "id": "4397cbfc-50f8-4244-b721-2a35d8e04715"
+                    },
+                    {
+                        "account": "embedded-artifact",
+                        "id": "d08add4b-ccdb-49fd-bc79-299bb47ddc10"
+                    }
+                ],
+                "name": "Bake (Manifest) Staging",
+                "namespace": "{{ .name }}-staging",
+                "outputName": "{{ .name }}-staging",
+                "overrides": {
+                    {{- range $index, $image := .images }}
+                    {{- $imageOrganization := printf "%s/%s" $root.Values.registry.address $image.organization }}
+                    "wso2.deployment.{{ $image.deployment }}.dockerRegistry": "{{ $imageOrganization }}",
+                    "wso2.deployment.{{ $image.deployment }}.imageName": "{{ $image.repository }}",
+                    "wso2.deployment.{{ $image.deployment }}.imageTag": "",
+                    "wso2.deployment.{{ $image.deployment }}.imagePullSecrets": "regcred",
+                    {{- if $image.microgateway }}
+                    "wso2.deployment.wso2microgw.projectName": "{{ $image.microgateway.projectName }}",
+                    {{- end }}
+                    {{- end }}
+                    "wso2.subscription.username": "{{ $root.Values.wso2Username }}",
+                    "wso2.subscription.password": "{{ $root.Values.wso2Password }}",
+                    "wso2.centralizedLogging.enabled": "true",
+                    "wso2.centralizedLogging.logstash.elasticsearch.host": "wso2-elasticsearch-master.{{ $release.Namespace }}.svc.cluster.local",
+                    "wso2.monitoring.enabled": "true",
+                    "wso2.monitoring.prometheus.serviceMonitor.labels.release": "{{ $root.Release.Name }}",
+                    "wso2.monitoring.prometheus.serviceMonitor.blackBoxNamespace": "{{ $root.Release.Namespace }}",
+                    "wso2.monitoring.prometheus.jmxJobName": "jmx"
+                },
+                "refId": "8",
+                "requisiteStageRefIds": [],
+                "templateRenderer": "HELM2",
+                "type": "bakeManifest"
+            }
+        ],
+        "triggers": [
+            {
+                "enabled": true,
+                "expectedArtifactIds": [
+                    "4397cbfc-50f8-4244-b721-2a35d8e04715",
+                    "aec2c4f1-2cb2-4d50-962a-dedc2a7457e0",
+                    "14234aae-38d8-424b-9d11-76cbade0e194"
+                ],
+                "payloadConstraints": {},
+                "source": "chart",
+                "type": "webhook"
+            }
+            {{- range $index, $image := .images }}
+            {{- $imageName := printf "%s/%s/%s" $root.Values.registry.address $image.organization $image.repository }}
+            ,{
+                "account": "dockerhub",
+                "enabled": true,
+                "expectedArtifactIds": [
+                    "{{- $index }}"
+                ],
+                "organization": "{{ $image.organization }}",
+                "registry": "{{ $root.Values.registry.address }}",
+                "repository": "{{ $image.organization }}/{{ $image.repository }}",
+                "type": "docker"
+            }
+            {{- end }}
+        ]
     }
 
   {{ .name }}-deploy-dev.json: |-
     {
-      "application": "{{ .name }}",
-      "name": "Deploy Dev",
-      "expectedArtifacts": [
-        {{- range $index, $image := .images }}
-        {{- $imageName := printf "%s/%s/%s" $root.Values.registry.address $image.organization $image.repository }}
+        "application": "{{ .name }}",
+        "name": "Deploy Dev",
+        "id": "{{ .name }}-deploy-dev",
+        "keepWaitingPipelines": false,
+        "limitConcurrent": true,
+        "expectedArtifacts": [
+            {{- range $index, $image := .images }}
+            {{- $imageName := printf "%s/%s/%s" $root.Values.registry.address $image.organization $image.repository }}
             {
-              "defaultArtifact": {
-                  "id": "beebe844-426d-46ee-9a9f-b13eeb251717",
-                  "name": "{{- $imageName}}",
-                  "reference": "{{- $imageName}}",
-                  "type": "docker/image"
-              },
-              "displayName": "{{- $imageName}}",
-              "id": "{{- $index }}",
-              "matchArtifact": {
-                  "id": "a8417d7f-2fa1-4d7b-a06b-e9610d5604fa",
-                  "name": "{{- $imageName}}",
-                  "type": "docker/image"
-              },
-              "useDefaultArtifact": false,
-              "usePriorArtifact": true
-            },
-        {{- end }}
-          {
-              "defaultArtifact": {
-                  "customKind": true,
-                  "id": "ef99e6d2-5335-4cb9-aa44-3afee04c641a"
-              },
-              "displayName": "dev-chart",
-              "id": "5fb1c65d-625c-4c17-9e60-9cbf688edad7",
-              "matchArtifact": {
-                  "id": "7873fd97-34b8-4d3f-aa20-6e9dac6c13dc",
-                  "name": "dev-chart",
-                  "type": "embedded/base64"
-              },
-              "useDefaultArtifact": false,
-              "usePriorArtifact": true
-          },
-          {
-              "defaultArtifact": {
-                  "customKind": true,
-                  "id": "edf1d805-a605-446c-b1c2-336cfac65f36"
-              },
-              "displayName": "production-chart",
-              "id": "be8e2ac8-93ef-461a-9244-345a0d11b00e",
-              "matchArtifact": {
-                  "id": "ec2cb412-bbad-4f2d-886c-660ec3032bbc",
-                  "name": "production-chart",
-                  "type": "embedded/base64"
-              },
-              "useDefaultArtifact": false,
-              "usePriorArtifact": true
-          },
-          {
-              "defaultArtifact": {
-                  "customKind": true,
-                  "id": "2f210ffa-7cd7-482c-a6aa-50ea1acfda0f"
-              },
-              "displayName": "staging-chart",
-              "id": "2c294f40-e908-46ac-bd88-3df63b4d8b1d",
-              "matchArtifact": {
-                  "id": "0aeaff79-b56f-4524-902a-1fda4cfe1c4d",
-                  "name": "staging-chart",
-                  "type": "embedded/base64"
-              },
-              "useDefaultArtifact": false,
-              "usePriorArtifact": true
-          }
-      ],
-      "keepWaitingPipelines": false,
-      "lastModifiedBy": "anonymous",
-      "limitConcurrent": true,
-      "stages": [
-          {
-              "account": "default",
-              "cloudProvider": "kubernetes",
-              "manifestArtifactAccount": "embedded-artifact",
-              "manifestArtifactId": "5fb1c65d-625c-4c17-9e60-9cbf688edad7",
-              "moniker": {
-                  "app": "{{ .name }}"
-              },
-              "name": "Deploy (Manifest) Dev",
-              "refId": "2",
-              "relationships": {
-                  "loadBalancers": [],
-                  "securityGroups": []
-              },
-              "requiredArtifactIds": [
-                {{- range $index, $image := .images }}
-                {{if ne $index 0}},{{end}}"{{- $index}}"
-                {{- end }}
-              ],
-              "requisiteStageRefIds": [
-                  "8"
-              ],
-              "skipExpressionEvaluation": true,
-              "source": "artifact",
-              "type": "deployManifest"
-          },
-          {
-              "failPipeline": true,
-              "judgmentInputs": [],
-              "name": "Manual Judgement",
-              "notifications": [],
-              "refId": "6",
-              "requisiteStageRefIds": [
-                  "2"
-              ],
-              "type": "manualJudgment"
-          },
-          {
-              "application": "{{ .name }}",
-              "failPipeline": true,
-              "name": "Pipeline",
-              "pipeline": "<DEPLOY_STAGING_ID>",
-              "refId": "7",
-              "requisiteStageRefIds": [
-                  "6"
-              ],
-              "type": "pipeline",
-              "waitForCompletion": false
-          },
-          {
-            "account": "default",
-            "cloudProvider": "kubernetes",
-            "isNew": true,
-            "manifest": null,
-            "manifestArtifactAccount": "kubernetes",
-            "manifests": [
-                {{- $namespace := printf "%s-%s" .name "dev"}}
-                {
-                    "apiVersion": "v1",
-                    "kind": "Namespace",
-                    "metadata": {
-                        "name": "{{ $namespace }}"
-                    }
+                "defaultArtifact": {
+                    "id": "beebe844-426d-46ee-9a9f-b13eeb251717",
+                    "name": "{{- $imageName}}",
+                    "reference": "{{- $imageName}}",
+                    "type": "docker/image"
                 },
-                {
-                    {{- $username := $root.Values.registry.username }}
-                    {{- $password := $root.Values.registry.password }}
-                    {{- $email := $root.Values.registry.email }}
-                    {{- $regId := $root.Values.registry.server }}
-                    {{- $auth := printf "%s:%s" $username $password | b64enc }}
-                    {{- $files := $root.Files }}
-                    "apiVersion": "v1",
-                    "kind": "Secret",
-                    "metadata": {
-                        "name": "regcred",
-                        "namespace" : "{{ $namespace }}",
-                        "annotations": {
-                            "strategy.spinnaker.io/versioned": "false"
+                "displayName": "{{- $imageName}}",
+                "id": "{{- $index }}",
+                "matchArtifact": {
+                    "id": "a8417d7f-2fa1-4d7b-a06b-e9610d5604fa",
+                    "name": "{{- $imageName}}",
+                    "type": "docker/image"
+                },
+                "useDefaultArtifact": false,
+                "usePriorArtifact": true
+            },
+            {{- end }}
+            {
+                "defaultArtifact": {
+                    "customKind": true,
+                    "id": "ef99e6d2-5335-4cb9-aa44-3afee04c641a"
+                },
+                "displayName": "dev-chart",
+                "id": "5fb1c65d-625c-4c17-9e60-9cbf688edad7",
+                "matchArtifact": {
+                    "id": "7873fd97-34b8-4d3f-aa20-6e9dac6c13dc",
+                    "name": "dev-chart",
+                    "type": "embedded/base64"
+                },
+                "useDefaultArtifact": false,
+                "usePriorArtifact": true
+            },
+            {
+                "defaultArtifact": {
+                    "customKind": true,
+                    "id": "edf1d805-a605-446c-b1c2-336cfac65f36"
+                },
+                "displayName": "production-chart",
+                "id": "be8e2ac8-93ef-461a-9244-345a0d11b00e",
+                "matchArtifact": {
+                    "id": "ec2cb412-bbad-4f2d-886c-660ec3032bbc",
+                    "name": "production-chart",
+                    "type": "embedded/base64"
+                },
+                "useDefaultArtifact": false,
+                "usePriorArtifact": true
+            },
+            {
+                "defaultArtifact": {
+                    "customKind": true,
+                    "id": "2f210ffa-7cd7-482c-a6aa-50ea1acfda0f"
+                },
+                "displayName": "staging-chart",
+                "id": "2c294f40-e908-46ac-bd88-3df63b4d8b1d",
+                "matchArtifact": {
+                    "id": "0aeaff79-b56f-4524-902a-1fda4cfe1c4d",
+                    "name": "staging-chart",
+                    "type": "embedded/base64"
+                },
+                "useDefaultArtifact": false,
+                "usePriorArtifact": true
+            }
+        ],
+        "stages": [
+            {
+                "account": "default",
+                "cloudProvider": "kubernetes",
+                "manifestArtifactAccount": "embedded-artifact",
+                "manifestArtifactId": "5fb1c65d-625c-4c17-9e60-9cbf688edad7",
+                "moniker": {
+                    "app": "{{ .name }}"
+                },
+                "name": "Deploy (Manifest) Dev",
+                "refId": "2",
+                "relationships": {
+                    "loadBalancers": [],
+                    "securityGroups": []
+                },
+                "requiredArtifactIds": [
+                    {{- range $index, $image := .images }}
+                    {{if ne $index 0}},{{end}}"{{- $index}}"
+                    {{- end }}
+                ],
+                "requisiteStageRefIds": [
+                    "8"
+                ],
+                "skipExpressionEvaluation": true,
+                "source": "artifact",
+                "type": "deployManifest"
+            },
+            {
+                "failPipeline": true,
+                "judgmentInputs": [],
+                "name": "Manual Judgement",
+                "notifications": [],
+                "refId": "6",
+                "requisiteStageRefIds": [
+                    "2"
+                ],
+                "type": "manualJudgment"
+            },
+            {
+                "account": "default",
+                "cloudProvider": "kubernetes",
+                "isNew": true,
+                "manifest": null,
+                "manifestArtifactAccount": "kubernetes",
+                "manifests": [
+                    {{- $namespace := printf "%s-%s" .name "dev"}}
+                    {
+                        "apiVersion": "v1",
+                        "kind": "Namespace",
+                        "metadata": {
+                            "name": "{{ $namespace }}"
                         }
                     },
-                    "type" : "kubernetes.io/dockerconfigjson",
-                    "data": {
-                        ".dockerconfigjson": "{{ $files.Get "auth.json" | replace "reg.id" $regId | replace "reg.username" $username | replace "reg.password" $password | replace "reg.email" $email | replace "reg.auth" $auth | b64enc }}"
+                    {
+                        {{- $username := $root.Values.registry.username }}
+                        {{- $password := $root.Values.registry.password }}
+                        {{- $email := $root.Values.registry.email }}
+                        {{- $regId := $root.Values.registry.server }}
+                        {{- $auth := printf "%s:%s" $username $password | b64enc }}
+                        {{- $files := $root.Files }}
+                        "apiVersion": "v1",
+                        "kind": "Secret",
+                        "metadata": {
+                            "name": "regcred",
+                            "namespace" : "{{ $namespace }}",
+                            "annotations": {
+                                "strategy.spinnaker.io/versioned": "false"
+                            }
+                        },
+                        "type" : "kubernetes.io/dockerconfigjson",
+                        "data": {
+                            ".dockerconfigjson": "{{ $files.Get "auth.json" | replace "reg.id" $regId | replace "reg.username" $username | replace "reg.password" $password | replace "reg.email" $email | replace "reg.auth" $auth | b64enc }}"
+                        }
                     }
-                }
-            ],
-            "moniker": {
-                "app": "{{ .name }}"
-            },
-            "name": "Deploy Namespace (Manifest)",
-            "refId": "8",
-            "relationships": {
-                "loadBalancers": [],
-                "securityGroups": []
-            },
-            "requisiteStageRefIds": [],
-            "skipExpressionEvaluation": false,
-            "source": "text",
-            "type": "deployManifest",
-            "versioned": null
-          }
-      ],
-      "triggers": [],
-      "updateTs": "1558527470000"
+                ],
+                "moniker": {
+                    "app": "{{ .name }}"
+                },
+                "name": "Deploy Namespace (Manifest)",
+                "refId": "8",
+                "relationships": {
+                    "loadBalancers": [],
+                    "securityGroups": []
+                },
+                "requisiteStageRefIds": [],
+                "skipExpressionEvaluation": false,
+                "source": "text",
+                "type": "deployManifest",
+                "versioned": null
+            }
+        ],
+        "triggers": [
+            {
+                "application": "{{ .name }}",
+                "enabled": true,
+                "expectedArtifactIds": [
+                    {{- range $index, $image := .images }}
+                    {{- $imageName := printf "%s/%s/%s" $root.Values.registry.address $image.organization $image.repository }}
+                    "{{ $index }}",
+                    {{- end }}
+                    "5fb1c65d-625c-4c17-9e60-9cbf688edad7",
+                    "be8e2ac8-93ef-461a-9244-345a0d11b00e",
+                    "2c294f40-e908-46ac-bd88-3df63b4d8b1d"
+                ],
+                "pipeline": "{{ .name }}-bake-artifacts",
+                "status": [
+                    "successful"
+                ],
+                "type": "pipeline"
+            }
+        ]
     }
 
   {{ .name }}-deploy-staging.json: |-
     {
-      "application": "{{ .name }}",
-      "name": "Deploy Staging",
-      "expectedArtifacts": [
-        {{- range $index, $image := .images }}
-        {{- $imageName := printf "%s/%s/%s" $root.Values.registry.address $image.organization $image.repository }}
-          {
-              "defaultArtifact": {
-                  "id": "{{- $index }}",
-                  "name": "{{- $imageName}}",
-                  "reference": "{{- $imageName}}",
-                  "type": "docker/image"
-              },
-              "displayName": "{{- $imageName}}",
-              "id": "{{- $index}}",
-              "matchArtifact": {
-                  "id": "a8417d7f-2fa1-4d7b-a06b-e9610d5604fa",
-                  "name": "{{- $imageName}}",
-                  "type": "docker/image"
-              },
-              "useDefaultArtifact": false,
-              "usePriorArtifact": true
-          },
-        {{- end }}
-          {
-              "defaultArtifact": {
-                  "customKind": true,
-                  "id": "ef99e6d2-5335-4cb9-aa44-3afee04c641a"
-              },
-              "displayName": "staging-chart",
-              "id": "5fb1c65d-625c-4c17-9e60-9cbf688edad7",
-              "matchArtifact": {
-                  "id": "7873fd97-34b8-4d3f-aa20-6e9dac6c13dc",
-                  "name": "staging-chart",
-                  "type": "embedded/base64"
-              },
-              "useDefaultArtifact": false,
-              "usePriorArtifact": true
-          },
-          {
-              "defaultArtifact": {
-                  "customKind": true,
-                  "id": "edf1d805-a605-446c-b1c2-336cfac65f36"
-              },
-              "displayName": "production-chart",
-              "id": "be8e2ac8-93ef-461a-9244-345a0d11b00e",
-              "matchArtifact": {
-                  "id": "ec2cb412-bbad-4f2d-886c-660ec3032bbc",
-                  "name": "production-chart",
-                  "type": "embedded/base64"
-              },
-              "useDefaultArtifact": false,
-              "usePriorArtifact": true
-          }
-      ],
-      "keepWaitingPipelines": false,
-      "lastModifiedBy": "anonymous",
-      "limitConcurrent": true,
-      "stages": [
-          {
-            "account": "default",
-            "cloudProvider": "kubernetes",
-            "isNew": true,
-            "manifest": null,
-            "manifestArtifactAccount": "kubernetes",
-            "manifests": [
-                {{- $namespace := printf "%s-%s" .name "staging"}}
-                {
-                    "apiVersion": "v1",
-                    "kind": "Namespace",
-                    "metadata": {
-                        "name": "{{ $namespace }}"
-                    }
+        "application": "{{ .name }}",
+        "name": "Deploy Staging",
+        "id": "{{ .name }}-deploy-staging",
+        "keepWaitingPipelines": false,
+        "limitConcurrent": true,
+        "expectedArtifacts": [
+            {{- range $index, $image := .images }}
+            {{- $imageName := printf "%s/%s/%s" $root.Values.registry.address $image.organization $image.repository }}
+            {
+                "defaultArtifact": {
+                    "id": "{{- $index }}",
+                    "name": "{{- $imageName}}",
+                    "reference": "{{- $imageName}}",
+                    "type": "docker/image"
                 },
-                {
-                    {{- $username := $root.Values.registry.username }}
-                    {{- $password := $root.Values.registry.password }}
-                    {{- $email := $root.Values.registry.email }}
-                    {{- $regId := $root.Values.registry.server }}
-                    {{- $auth := printf "%s:%s" $username $password | b64enc }}
-                    {{- $files := $root.Files }}
-                    "apiVersion": "v1",
-                    "kind": "Secret",
-                    "metadata": {
-                        "name": "regcred",
-                        "namespace" : "{{ $namespace }}",
-                        "annotations": {
-                            "strategy.spinnaker.io/versioned": "false"
+                "displayName": "{{- $imageName}}",
+                "id": "{{- $index}}",
+                "matchArtifact": {
+                    "id": "a8417d7f-2fa1-4d7b-a06b-e9610d5604fa",
+                    "name": "{{- $imageName}}",
+                    "type": "docker/image"
+                },
+                "useDefaultArtifact": false,
+                "usePriorArtifact": true
+            },
+            {{- end }}
+            {
+                "defaultArtifact": {
+                    "customKind": true,
+                    "id": "ef99e6d2-5335-4cb9-aa44-3afee04c641a"
+                },
+                "displayName": "staging-chart",
+                "id": "5fb1c65d-625c-4c17-9e60-9cbf688edad7",
+                "matchArtifact": {
+                    "id": "7873fd97-34b8-4d3f-aa20-6e9dac6c13dc",
+                    "name": "staging-chart",
+                    "type": "embedded/base64"
+                },
+                "useDefaultArtifact": false,
+                "usePriorArtifact": true
+            },
+            {
+                "defaultArtifact": {
+                    "customKind": true,
+                    "id": "edf1d805-a605-446c-b1c2-336cfac65f36"
+                },
+                "displayName": "production-chart",
+                "id": "be8e2ac8-93ef-461a-9244-345a0d11b00e",
+                "matchArtifact": {
+                    "id": "ec2cb412-bbad-4f2d-886c-660ec3032bbc",
+                    "name": "production-chart",
+                    "type": "embedded/base64"
+                },
+                "useDefaultArtifact": false,
+                "usePriorArtifact": true
+            }
+        ],
+        "stages": [
+            {
+                "account": "default",
+                "cloudProvider": "kubernetes",
+                "isNew": true,
+                "manifest": null,
+                "manifestArtifactAccount": "kubernetes",
+                "manifests": [
+                    {{- $namespace := printf "%s-%s" .name "staging"}}
+                    {
+                        "apiVersion": "v1",
+                        "kind": "Namespace",
+                        "metadata": {
+                            "name": "{{ $namespace }}"
                         }
                     },
-                    "type" : "kubernetes.io/dockerconfigjson",
-                    "data": {
-                        ".dockerconfigjson": "{{ $files.Get "auth.json" | replace "reg.id" $regId | replace "reg.username" $username | replace "reg.password" $password | replace "reg.email" $email | replace "reg.auth" $auth | b64enc }}"
+                    {
+                        {{- $username := $root.Values.registry.username }}
+                        {{- $password := $root.Values.registry.password }}
+                        {{- $email := $root.Values.registry.email }}
+                        {{- $regId := $root.Values.registry.server }}
+                        {{- $auth := printf "%s:%s" $username $password | b64enc }}
+                        {{- $files := $root.Files }}
+                        "apiVersion": "v1",
+                        "kind": "Secret",
+                        "metadata": {
+                            "name": "regcred",
+                            "namespace" : "{{ $namespace }}",
+                            "annotations": {
+                                "strategy.spinnaker.io/versioned": "false"
+                            }
+                        },
+                        "type" : "kubernetes.io/dockerconfigjson",
+                        "data": {
+                            ".dockerconfigjson": "{{ $files.Get "auth.json" | replace "reg.id" $regId | replace "reg.username" $username | replace "reg.password" $password | replace "reg.email" $email | replace "reg.auth" $auth | b64enc }}"
+                        }
                     }
-                }
-            ],
-            "moniker": {
-                "app": "{{ .name }}"
+                ],
+                "moniker": {
+                    "app": "{{ .name }}"
+                },
+                "name": "Deploy Namespace (Manifest)",
+                "refId": "8",
+                "relationships": {
+                    "loadBalancers": [],
+                    "securityGroups": []
+                },
+                "requisiteStageRefIds": [],
+                "skipExpressionEvaluation": false,
+                "source": "text",
+                "type": "deployManifest",
+                "versioned": null
             },
-            "name": "Deploy Namespace (Manifest)",
-            "refId": "8",
-            "relationships": {
-                "loadBalancers": [],
-                "securityGroups": []
+            {
+                "account": "default",
+                "cloudProvider": "kubernetes",
+                "manifestArtifactAccount": "embedded-artifact",
+                "manifestArtifactId": "5fb1c65d-625c-4c17-9e60-9cbf688edad7",
+                "moniker": {
+                    "app": "{{ .name }}"
+                },
+                "name": "Deploy (Manifest) staging",
+                "refId": "2",
+                "relationships": {
+                    "loadBalancers": [],
+                    "securityGroups": []
+                },
+                "requiredArtifactIds": [
+                    {{- range $index, $image := .images }}
+                    {{if ne $index 0}},{{end}}"{{- $index}}"
+                    {{- end }}
+                ],
+                "requisiteStageRefIds": [
+                    "8"
+                ],
+                "skipExpressionEvaluation": true,
+                "source": "artifact",
+                "type": "deployManifest"
             },
-            "requisiteStageRefIds": [],
-            "skipExpressionEvaluation": false,
-            "source": "text",
-            "type": "deployManifest",
-            "versioned": null
-          },
-          {
-              "account": "default",
-              "cloudProvider": "kubernetes",
-              "manifestArtifactAccount": "embedded-artifact",
-              "manifestArtifactId": "5fb1c65d-625c-4c17-9e60-9cbf688edad7",
-              "moniker": {
-                  "app": "{{ .name }}"
-              },
-              "name": "Deploy (Manifest) staging",
-              "refId": "2",
-              "relationships": {
-                  "loadBalancers": [],
-                  "securityGroups": []
-              },
-              "requiredArtifactIds": [
-                {{- range $index, $image := .images }}
-                {{if ne $index 0}},{{end}}"{{- $index}}"
-                {{- end }}
-              ],
-              "requisiteStageRefIds": [
-                  "8"
-              ],
-              "skipExpressionEvaluation": true,
-              "source": "artifact",
-              "type": "deployManifest"
-          },
-          {
-              "command": "{{ .testScript.command}}",
-              "failPipeline": true,
-              "name": "Test Script",
-              "refId": "5",
-              "repoBranch": "master",
-              "repoUrl": "{{ .chart.repo }}",
-              "requisiteStageRefIds": [
-                  "2"
-              ],
-              "scriptPath": "{{ .testScript.path }}",
-              "type": "script",
-              "user": "[anonymous]",
-              "waitForCompletion": true
-          },
-          {
-              "failPipeline": true,
-              "judgmentInputs": [],
-              "name": "Manual Judgement",
-              "notifications": [],
-              "refId": "6",
-              "requisiteStageRefIds": [
-                  "5"
-              ],
-              "type": "manualJudgment"
-          },
-          {
-              "application": "{{ .name }}",
-              "failPipeline": true,
-              "name": "Pipeline",
-              "pipeline": "<DEPLOY_PRODUCTION_ID>",
-              "refId": "7",
-              "requisiteStageRefIds": [
-                  "6"
-              ],
-              "type": "pipeline",
-              "waitForCompletion": false
-          }
-      ],
-      "triggers": [],
-      "updateTs": "1558005007000"
+            {
+                "command": "{{ .testScript.command}}",
+                "failPipeline": true,
+                "name": "Test Script",
+                "refId": "5",
+                "repoBranch": "master",
+                "repoUrl": "{{ .chart.repo }}",
+                "requisiteStageRefIds": [
+                    "2"
+                ],
+                "scriptPath": "{{ .testScript.path }}",
+                "type": "script",
+                "user": "[anonymous]",
+                "waitForCompletion": true
+            },
+            {
+                "failPipeline": true,
+                "judgmentInputs": [],
+                "name": "Manual Judgement",
+                "notifications": [],
+                "refId": "6",
+                "requisiteStageRefIds": [
+                    "5"
+                ],
+                "type": "manualJudgment"
+            }
+        ],
+        "triggers": [
+            {
+                "application": "{{ .name }}",
+                "enabled": true,
+                "expectedArtifactIds": [
+                    {{- range $index, $image := .images }}
+                    {{- $imageName := printf "%s/%s/%s" $root.Values.registry.address $image.organization $image.repository }}
+                    "{{ $index }}",
+                    {{- end }}
+                    "5fb1c65d-625c-4c17-9e60-9cbf688edad7",
+                    "be8e2ac8-93ef-461a-9244-345a0d11b00e"
+                ],
+                "pipeline": "{{ .name }}-deploy-dev",
+                "status": [
+                    "successful"
+                ],
+                "type": "pipeline"
+            }
+        ]
     }
 
   {{ .name }}-deploy-production.json: |-
     {
-      "application": "{{ .name }}",
-      "name": "Deploy Production",
-      "expectedArtifacts": [
-        {
-          "defaultArtifact": {
-            "customKind": true,
-            "id": "56330e63-2a3a-4979-a432-043e0c653685"
-          },
-          "displayName": "production-chart",
-          "id": "4397cbfc-50f8-4244-b721-2a35d8e04715",
-          "matchArtifact": {
-            "id": "7f76f43f-37fd-4410-81f2-c1acd4cf8422",
-            "name": "production-chart",
-            "type": "embedded/base64"
-          },
-          "useDefaultArtifact": false,
-          "usePriorArtifact": true
-        }
-        {{- range $index, $image := .images }}
-        {{- $imageName := printf "%s/%s/%s" $root.Values.registry.address $image.organization $image.repository }}
-        ,{
-          "defaultArtifact": {
-            "customKind": true,
-            "id": "d0960d0c-5294-408d-a24b-81ec1537abd8"
-          },
-          "displayName": "{{- $imageName}}",
-          "id": "{{- $index}}",
-          "matchArtifact": {
-            "id": "152022db-5a95-4963-a88c-3e7f3e31af01",
-            "name": "{{- $imageName}}",
-            "type": "docker/image"
-          },
-          "useDefaultArtifact": false,
-          "usePriorArtifact": true
-        }
-        {{- end }}
-      ],
-      "keepWaitingPipelines": false,
-      "lastModifiedBy": "anonymous",
-      "limitConcurrent": true,
-      "stages": [
-        {
-            "account": "default",
-            "cloudProvider": "kubernetes",
-            "isNew": true,
-            "manifest": null,
-            "manifestArtifactAccount": "kubernetes",
-            "manifests": [
-                {{- $namespace := printf "%s-%s" .name "prod"}}
-                {
-                    "apiVersion": "v1",
-                    "kind": "Namespace",
-                    "metadata": {
-                        "name": "{{ $namespace }}"
-                    }
+        "application": "{{ .name }}",
+        "name": "Deploy Production",
+        "id": "{{ .name }}-deploy-production",
+        "keepWaitingPipelines": false,
+        "limitConcurrent": true,
+        "expectedArtifacts": [
+            {
+                "defaultArtifact": {
+                    "customKind": true,
+                    "id": "56330e63-2a3a-4979-a432-043e0c653685"
                 },
-                {
-                    {{- $username := $root.Values.registry.username }}
-                    {{- $password := $root.Values.registry.password }}
-                    {{- $email := $root.Values.registry.email }}
-                    {{- $regId := $root.Values.registry.server }}
-                    {{- $auth := printf "%s:%s" $username $password | b64enc }}
-                    {{- $files := $root.Files }}
-                    "apiVersion": "v1",
-                    "kind": "Secret",
-                    "metadata": {
-                        "name": "regcred",
-                        "namespace" : "{{ $namespace }}",
-                        "annotations": {
-                            "strategy.spinnaker.io/versioned": "false"
+                "displayName": "production-chart",
+                "id": "4397cbfc-50f8-4244-b721-2a35d8e04715",
+                "matchArtifact": {
+                    "id": "7f76f43f-37fd-4410-81f2-c1acd4cf8422",
+                    "name": "production-chart",
+                    "type": "embedded/base64"
+                },
+                "useDefaultArtifact": false,
+                "usePriorArtifact": true
+            }
+            {{- range $index, $image := .images }}
+            {{- $imageName := printf "%s/%s/%s" $root.Values.registry.address $image.organization $image.repository }}
+            ,{
+            "defaultArtifact": {
+                "customKind": true,
+                "id": "d0960d0c-5294-408d-a24b-81ec1537abd8"
+            },
+            "displayName": "{{- $imageName}}",
+            "id": "{{- $index}}",
+            "matchArtifact": {
+                "id": "152022db-5a95-4963-a88c-3e7f3e31af01",
+                "name": "{{- $imageName}}",
+                "type": "docker/image"
+            },
+            "useDefaultArtifact": false,
+            "usePriorArtifact": true
+            }
+            {{- end }}
+        ],
+        "stages": [
+            {
+                "account": "default",
+                "cloudProvider": "kubernetes",
+                "isNew": true,
+                "manifest": null,
+                "manifestArtifactAccount": "kubernetes",
+                "manifests": [
+                    {{- $namespace := printf "%s-%s" .name "prod"}}
+                    {
+                        "apiVersion": "v1",
+                        "kind": "Namespace",
+                        "metadata": {
+                            "name": "{{ $namespace }}"
                         }
                     },
-                    "type" : "kubernetes.io/dockerconfigjson",
-                    "data": {
-                        ".dockerconfigjson": "{{ $files.Get "auth.json" | replace "reg.id" $regId | replace "reg.username" $username | replace "reg.password" $password | replace "reg.email" $email | replace "reg.auth" $auth | b64enc }}"
+                    {
+                        {{- $username := $root.Values.registry.username }}
+                        {{- $password := $root.Values.registry.password }}
+                        {{- $email := $root.Values.registry.email }}
+                        {{- $regId := $root.Values.registry.server }}
+                        {{- $auth := printf "%s:%s" $username $password | b64enc }}
+                        {{- $files := $root.Files }}
+                        "apiVersion": "v1",
+                        "kind": "Secret",
+                        "metadata": {
+                            "name": "regcred",
+                            "namespace" : "{{ $namespace }}",
+                            "annotations": {
+                                "strategy.spinnaker.io/versioned": "false"
+                            }
+                        },
+                        "type" : "kubernetes.io/dockerconfigjson",
+                        "data": {
+                            ".dockerconfigjson": "{{ $files.Get "auth.json" | replace "reg.id" $regId | replace "reg.username" $username | replace "reg.password" $password | replace "reg.email" $email | replace "reg.auth" $auth | b64enc }}"
+                        }
                     }
-                }
-            ],
+                ],
+                "moniker": {
+                    "app": "{{ .name }}"
+                },
+                "name": "Deploy Namespace (Manifest)",
+                "refId": "8",
+                "relationships": {
+                    "loadBalancers": [],
+                    "securityGroups": []
+                },
+                "requisiteStageRefIds": [],
+                "skipExpressionEvaluation": false,
+                "source": "text",
+                "type": "deployManifest",
+                "versioned": null
+            },
+            {
+            "account": "default",
+            "cloudProvider": "kubernetes",
+            "manifestArtifactAccount": "embedded-artifact",
+            "manifestArtifactId": "4397cbfc-50f8-4244-b721-2a35d8e04715",
             "moniker": {
                 "app": "{{ .name }}"
             },
-            "name": "Deploy Namespace (Manifest)",
-            "refId": "8",
+            "name": "Deploy (Manifest) Production",
+            "refId": "4",
             "relationships": {
                 "loadBalancers": [],
                 "securityGroups": []
             },
-            "requisiteStageRefIds": [],
-            "skipExpressionEvaluation": false,
-            "source": "text",
-            "type": "deployManifest",
-            "versioned": null
-          },
-        {
-          "account": "default",
-          "cloudProvider": "kubernetes",
-          "manifestArtifactAccount": "embedded-artifact",
-          "manifestArtifactId": "4397cbfc-50f8-4244-b721-2a35d8e04715",
-          "moniker": {
-            "app": "{{ .name }}"
-          },
-          "name": "Deploy (Manifest) Production",
-          "refId": "4",
-          "relationships": {
-            "loadBalancers": [],
-            "securityGroups": []
-          },
-          "requiredArtifactIds": [
-            {{- range $index, $image := .images }}
-            {{if ne $index 0}},{{end}}"{{- $index}}"
-            {{- end }}
-          ],
-          "requisiteStageRefIds": [
-              "8"
-          ],
-          "skipExpressionEvaluation": true,
-          "source": "artifact",
-          "type": "deployManifest"
-        }
-      ],
-      "triggers": [],
-      "updateTs": "1558004473000"
+            "requiredArtifactIds": [
+                {{- range $index, $image := .images }}
+                {{if ne $index 0}},{{end}}"{{- $index}}"
+                {{- end }}
+            ],
+            "requisiteStageRefIds": [
+                "8"
+            ],
+            "skipExpressionEvaluation": true,
+            "source": "artifact",
+            "type": "deployManifest"
+            }
+        ],
+        "triggers": [
+            {
+                "application": "{{ .name }}",
+                "enabled": true,
+                "expectedArtifactIds": [
+                    {{- range $index, $image := .images }}
+                    {{- $imageName := printf "%s/%s/%s" $root.Values.registry.address $image.organization $image.repository }}
+                    "{{ $index }}",
+                    {{- end }}
+                    "4397cbfc-50f8-4244-b721-2a35d8e04715"
+                ],
+                "pipeline": "{{ .name }}-deploy-staging",
+                "status": [
+                    "successful"
+                ],
+                "type": "pipeline"
+            }
+        ]
     }
 
   {{- end }}
