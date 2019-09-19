@@ -192,7 +192,7 @@ data:
     # pointing to the correct grape root directory.
     # export JAVA_OPTS=&apos;-Dgrape.root=${WORKSPACE}/.groovy/grape&apos;
     echo ${TASK_ID}
-    sh ${SCRIPT_PATH}/${COMMAND}</command>
+    ./${SCRIPT_PATH}/${COMMAND}</command>
         </hudson.tasks.Shell>
       </builders>
       <publishers>
