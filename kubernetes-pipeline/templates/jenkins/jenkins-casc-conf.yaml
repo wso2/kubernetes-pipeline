@@ -74,21 +74,28 @@ data:
                 {{- if and (not (eq $root.Values.wso2Username "")) (not (eq $root.Values.wso2Password "")) }}
                 docker login docker.wso2.com -u \$WSO2_USERNAME -p \$WSO2_PASSWORD
                 {{- end }}
-                # Set WSO2 Base Image
-                sed -i "s|<BASE>|{{ $image.customImage.baseImage }}|" Dockerfile
-
-                IMAGE_NAME={{ $image.organization }}/{{ $image.repository }}:`timestamp`
-                docker build -t \$IMAGE_NAME .
                 docker login -u \$REGISTRY_USERNAME -p \$REGISTRY_PASSWORD
 
-                # Push latest tag if it does not exist
-                if ! docker pull {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }}; 
-                then 
-                  docker tag {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }}:\$TAG {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
-                  docker push {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
-                fi
+                TIMESTAMP=`date +%Y%m%d%H%M%S`
+                REGISTRY_NAME="{{ $root.Values.registry.address }}/{{ $image.organization }}"
+                REPOSITORY="{{ $image.repository }}"
+                BASE_IMAGE="{{ $image.customImage.baseImage }}"
+                TAGGED_BASE_IMAGE=\$REGISTRY_NAME/\$REPOSITORY-wum:\$TIMESTAMP
 
-                docker push \$IMAGE_NAME""")
+                # Tag WSO2 image with current timestamp
+                docker pull \$BASE_IMAGE
+                docker tag \$BASE_IMAGE \$TAGGED_BASE_IMAGE
+
+                # Build custom image using the wum updated image
+                TAG=`git rev-parse --short HEAD`
+                sed -i \"s|<BASE>|\$TAGGED_BASE_IMAGE|\" Dockerfile
+
+                docker build -t \$REGISTRY_NAME/\$REPOSITORY:\$TIMESTAMP-\$TAG .
+                docker push \$REGISTRY_NAME/\$REPOSITORY:\$TIMESTAMP-\$TAG
+
+                docker tag \$REGISTRY_NAME/\$REPOSITORY:\$TIMESTAMP-\$TAG \$REGISTRY_NAME/\$REPOSITORY:latest
+                docker push \$REGISTRY_NAME/\$REPOSITORY:latest
+                """)
             }
           }
       - script: >
@@ -112,36 +119,35 @@ data:
             }
             steps {
               shell("""
-                timestamp() {
-                  date +\"%Y%m%d%H%M%S\"
-                }
 
                 {{- if and (not (eq $root.Values.wso2Username "")) (not (eq $root.Values.wso2Password "")) }}
                 docker login docker.wso2.com -u \$WSO2_USERNAME -p \$WSO2_PASSWORD
                 {{- end }}
-                
-                TAG=`docker images {{ $image.organization }}/{{ $image.repository }} --format '{{ "{{ .Tag }}" }}' | sort -nrk1 | head -1`
-                if [ -z "\$TAG" ]
-                then
-                  TAG=`date +\"%Y%m%d%H%M%S\"`
-                  sed -i "s|<BASE>|{{ $image.customImage.baseImage }}|" Dockerfile
-                else
-                  sed -i "s|<BASE>|{{ $image.organization }}/{{ $image.repository }}:\$TAG|" Dockerfile
-                fi
-                #TAG=`docker images {{ $image.organization }}/{{ $image.repository }} --format '{{ "{{ .Tag }}" }}' | sort -nrk1 | head -1`
-                #sed -i "s|<BASE>|{{ $image.organization }}/{{ $image.repository }}:\$TAG|" Dockerfile
-                TAG=`timestamp`
-                docker build -t {{ $image.organization }}/{{ $image.repository }}:\$TAG .
                 docker login -u \$REGISTRY_USERNAME -p \$REGISTRY_PASSWORD
 
-                # Push latest tag if it does not exist
-                if ! docker pull {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }}; 
-                then 
-                  docker tag {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }}:\$TAG {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
-                  docker push {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
-                fi
+                TIMESTAMP=`date +%Y%m%d%H%M%S`
+                REGISTRY_NAME="{{ $root.Values.registry.address }}/{{ $image.organization }}"
+                REPOSITORY="{{ $image.repository }}"
+                BASE_IMAGE="{{ $image.customImage.baseImage }}"
 
-                docker push {{ $image.organization }}/{{ $image.repository }}:\$TAG""")
+                WUM_TIMESTAMP=`docker images \$REGISTRY_NAME/\$REPOSITORY-wum --format '{{ "{{ .Tag }}" }}' | sort -nrk1 | head -1`
+                if [ -z "\$WUM_TIMESTAMP" ]
+                then
+                  docker pull \$BASE_IMAGE
+                  docker tag \$BASE_IMAGE \$REGISTRY_NAME/\$REPOSITORY-wum:\$TIMESTAMP
+                  WUM_TIMESTAMP=\$TIMESTAMP
+                fi
+                TAGGED_BASE_IMAGE=\$REGISTRY_NAME/\$REPOSITORY-wum:\$WUM_TIMESTAMP
+
+                TAG=`git rev-parse --short HEAD`
+                sed -i "s|<BASE>|\$TAGGED_BASE_IMAGE|" Dockerfile
+                docker build -t \$REGISTRY_NAME/\$REPOSITORY:\$WUM_TIMESTAMP-\$TAG .
+
+                docker push \$REGISTRY_NAME/\$REPOSITORY:\$WUM_TIMESTAMP-\$TAG
+
+                docker tag \$REGISTRY_NAME/\$REPOSITORY:\$WUM_TIMESTAMP-\$TAG \$REGISTRY_NAME/\$REPOSITORY
+                docker push \$REGISTRY_NAME/\$REPOSITORY
+                """)
             }
           }
       {{- end }}
