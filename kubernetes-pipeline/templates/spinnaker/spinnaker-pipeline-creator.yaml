@@ -463,7 +463,7 @@ data:
                 "type": "deployManifest"
             },
             {
-                "failPipeline": true,
+                "failPipeline": false,
                 "judgmentInputs": [],
                 "name": "Manual Judgement",
                 "notifications": [],
@@ -702,7 +702,7 @@ data:
                 "waitForCompletion": true
             },
             {
-                "failPipeline": true,
+                "failPipeline": false,
                 "judgmentInputs": [],
                 "name": "Manual Judgement",
                 "notifications": [],
