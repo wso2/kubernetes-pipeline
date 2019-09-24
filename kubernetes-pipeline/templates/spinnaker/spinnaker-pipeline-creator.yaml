@@ -439,43 +439,6 @@ data:
             {
                 "account": "default",
                 "cloudProvider": "kubernetes",
-                "manifestArtifactAccount": "embedded-artifact",
-                "manifestArtifactId": "5fb1c65d-625c-4c17-9e60-9cbf688edad7",
-                "moniker": {
-                    "app": "{{ .name }}"
-                },
-                "name": "Deploy (Manifest) Dev",
-                "refId": "2",
-                "relationships": {
-                    "loadBalancers": [],
-                    "securityGroups": []
-                },
-                "requiredArtifactIds": [
-                    {{- range $index, $image := .images }}
-                    {{if ne $index 0}},{{end}}"{{- $index}}"
-                    {{- end }}
-                ],
-                "requisiteStageRefIds": [
-                    "8"
-                ],
-                "skipExpressionEvaluation": true,
-                "source": "artifact",
-                "type": "deployManifest"
-            },
-            {
-                "failPipeline": true,
-                "judgmentInputs": [],
-                "name": "Manual Judgement",
-                "notifications": [],
-                "refId": "6",
-                "requisiteStageRefIds": [
-                    "2"
-                ],
-                "type": "manualJudgment"
-            },
-            {
-                "account": "default",
-                "cloudProvider": "kubernetes",
                 "isNew": true,
                 "manifest": null,
                 "manifestArtifactAccount": "kubernetes",
@@ -514,7 +477,7 @@ data:
                     "app": "{{ .name }}"
                 },
                 "name": "Deploy Namespace (Manifest)",
-                "refId": "8",
+                "refId": "1",
                 "relationships": {
                     "loadBalancers": [],
                     "securityGroups": []
@@ -524,6 +487,32 @@ data:
                 "source": "text",
                 "type": "deployManifest",
                 "versioned": null
+            },
+            {
+              "account": "default",
+              "cloudProvider": "kubernetes",
+              "manifestArtifactAccount": "embedded-artifact",
+              "manifestArtifactId": "5fb1c65d-625c-4c17-9e60-9cbf688edad7",
+              "moniker": {
+                "app": "{{ .name }}"
+              },
+              "name": "Deploy (Manifest) Dev",
+              "refId": "2",
+              "relationships": {
+                "loadBalancers": [],
+                "securityGroups": []
+              },
+              "requiredArtifactIds": [
+              {{- range $index, $image := .images }}
+              {{if ne $index 0}},{{end}}"{{- $index}}"
+              {{- end }}
+              ],
+               "requisiteStageRefIds": [
+                 "1"
+               ],
+               "skipExpressionEvaluation": true,
+               "source": "artifact",
+               "type": "deployManifest"
             }
         ],
         "triggers": [
@@ -609,6 +598,16 @@ data:
         ],
         "stages": [
             {
+              "failPipeline": true,
+              "isNew": true,
+              "judgmentInputs": [],
+              "name": "Manual Judgment",
+              "notifications": [],
+              "refId": "1",
+              "requisiteStageRefIds": [],
+              "type": "manualJudgment"
+            },
+            {
                 "account": "default",
                 "cloudProvider": "kubernetes",
                 "isNew": true,
@@ -649,12 +648,14 @@ data:
                     "app": "{{ .name }}"
                 },
                 "name": "Deploy Namespace (Manifest)",
-                "refId": "8",
+                "refId": "2",
                 "relationships": {
                     "loadBalancers": [],
                     "securityGroups": []
                 },
-                "requisiteStageRefIds": [],
+                "requisiteStageRefIds": [
+                  "1"
+                ],
                 "skipExpressionEvaluation": false,
                 "source": "text",
                 "type": "deployManifest",
@@ -669,7 +670,7 @@ data:
                     "app": "{{ .name }}"
                 },
                 "name": "Deploy (Manifest) staging",
-                "refId": "2",
+                "refId": "3",
                 "relationships": {
                     "loadBalancers": [],
                     "securityGroups": []
@@ -680,7 +681,7 @@ data:
                     {{- end }}
                 ],
                 "requisiteStageRefIds": [
-                    "8"
+                    "2"
                 ],
                 "skipExpressionEvaluation": true,
                 "source": "artifact",
@@ -690,27 +691,16 @@ data:
                 "command": "{{ .testScript.command}}",
                 "failPipeline": true,
                 "name": "Test Script",
-                "refId": "5",
+                "refId": "4",
                 "repoBranch": "master",
                 "repoUrl": "{{ .chart.repo }}",
                 "requisiteStageRefIds": [
-                    "2"
+                    "3"
                 ],
                 "scriptPath": "{{ .testScript.path }}",
                 "type": "script",
                 "user": "[anonymous]",
                 "waitForCompletion": true
-            },
-            {
-                "failPipeline": true,
-                "judgmentInputs": [],
-                "name": "Manual Judgement",
-                "notifications": [],
-                "refId": "6",
-                "requisiteStageRefIds": [
-                    "5"
-                ],
-                "type": "manualJudgment"
             }
         ],
         "triggers": [
@@ -778,6 +768,16 @@ data:
         ],
         "stages": [
             {
+              "failPipeline": true,
+              "isNew": true,
+              "judgmentInputs": [],
+              "name": "Manual Judgment",
+              "notifications": [],
+              "refId": "1",
+              "requisiteStageRefIds": [],
+              "type": "manualJudgment"
+            },
+            {
                 "account": "default",
                 "cloudProvider": "kubernetes",
                 "isNew": true,
@@ -818,12 +818,14 @@ data:
                     "app": "{{ .name }}"
                 },
                 "name": "Deploy Namespace (Manifest)",
-                "refId": "8",
+                "refId": "2",
                 "relationships": {
                     "loadBalancers": [],
                     "securityGroups": []
                 },
-                "requisiteStageRefIds": [],
+                "requisiteStageRefIds": [
+                  "1"
+                ],
                 "skipExpressionEvaluation": false,
                 "source": "text",
                 "type": "deployManifest",
@@ -838,7 +840,7 @@ data:
                 "app": "{{ .name }}"
             },
             "name": "Deploy (Manifest) Production",
-            "refId": "4",
+            "refId": "3",
             "relationships": {
                 "loadBalancers": [],
                 "securityGroups": []
@@ -849,7 +851,7 @@ data:
                 {{- end }}
             ],
             "requisiteStageRefIds": [
-                "8"
+                "2"
             ],
             "skipExpressionEvaluation": true,
             "source": "artifact",
