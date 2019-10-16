@@ -34,7 +34,7 @@ After creating the repository, pull the latest image from WSO2 and push it to th
 
     ```
     docker pull wso2/wso2ei-integrator:6.5.0
-    docker tag wso2/wso2ei-integrator:6.5.0<DOCKER_ORGANIZATION>/wso2ei-integrator
+    docker tag wso2/wso2ei-integrator:6.5.0 <DOCKER_ORGANIZATION>/wso2ei-integrator
     ```
 
 > The WSO2 Enterprise Integrator Docker image automatically fetches product updates on a weekly basis. If you do not have a WSO2 subscription account, you can sign up for a free trial [here](https://wso2.com/subscription).
