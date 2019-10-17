@@ -20,22 +20,25 @@ github:
 # Credentials to access the private Dockerhub registry
 registry:
   server: 'https://index.docker.io/v1/'
-  username: <REGISTRY_USERNAME>
-  password: <REGISTRY_PASSWORD>
-  email: <REGISTRY_EMAIL>
-  address: index.docker.io
+  username: &reg_username <REGISTRY_USERNAME>
+  password: &reg_password <REGISTRY_PASSWORD>
+  email: &reg_email <REGISTRY_EMAIL>
+  address: &reg_email index.docker.io
+  # Add each repositories that would be used in the deployment
+  repositories:
+    &reg_repos
+    - <REGISTRY_USERNAME>/petstore
 
 # Values to configure Spinnaker
 spinnaker:
   dockerRegistries:
     - name: dockerhub
-      address: index.docker.io
-      username: <REGISTRY_USERNAME>
-      password: <REGISTRY_PASSWORD>
-      email: <REGISTRY_EMAIL>
-      # Add each repositories that would be used in the deployment
+      address: *reg_address
+      username: *reg_username
+      password: *reg_password
+      email: *reg_email
       repositories:
-        - <REGISTRY_USERNAME>/petstore
+        *reg_repos
 
 applications:
   - name: wso2mgw
@@ -49,7 +52,7 @@ applications:
       version: 3.0.1-1
       repo: 'https://github.com/wso2-incubator/cicd-sample-chart-mgw'
     images:
-      - organization: <REGISTRY_USERNAME>
+      - organization: *reg_username
         repository: petstore
         deployment: wso2microgw
         microgateway:
