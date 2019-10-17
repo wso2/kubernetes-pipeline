@@ -20,22 +20,25 @@ github:
 # Credentials to access the private Dockerhub registry
 registry:
   server: 'https://index.docker.io/v1/'
-  username: <REGISTRY_USERNAME>
-  password: <REGISTRY_PASSWORD>
-  email: <REGISTRY_EMAIL>
-  address: index.docker.io
+  username: &reg_username <REGISTRY_USERNAME>
+  password: &reg_password <REGISTRY_PASSWORD>
+  email: &reg_email <REGISTRY_EMAIL>
+  address: &reg_email index.docker.io
+  # Add each repositories that would be used in the deployment
+  repositories:
+    &reg_repos
+    - <REGISTRY_USERNAME>/wso2ei-integrator
 
 # Values to configure Spinnaker
 spinnaker:
   dockerRegistries:
     - name: dockerhub
-      address: index.docker.io
-      username: <REGISTRY_USERNAME>
-      password: <REGISTRY_PASSWORD>
-      email: <REGISTRY_EMAIL>
-      # Add each repositories that would be used in the deployment
+      address: *reg_address
+      username: *reg_username
+      password: *reg_password
+      email: *reg_email
       repositories:
-        - <REGISTRY_USERNAME>/wso2ei-integrator
+        *reg_repos
 
 applications:
   - name: wso2ei
@@ -49,7 +52,7 @@ applications:
       version: 6.5.0-3
       repo: 'https://github.com/wso2-incubator/cicd-sample-chart-ei'
     images:
-      - organization: <REGISTRY_USERNAME>
+      - organization: *reg_username
         repository: wso2ei-integrator
         deployment: wso2ei
         customImage:
