@@ -197,12 +197,9 @@ data:
                 USER_REPO_TAG=\$TAG-`timestamp`
                 docker tag \$REGISTRY/\$ORGANIZATION/{{ $image.repository }}:\$TAG {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }}:\$USER_REPO_TAG
 
-                # Push latest tag if it does not exist
-                if ! docker pull {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }}; 
-                then 
-                  docker tag \$REGISTRY/\$ORGANIZATION/{{ $image.repository }}:\$TAG {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
-                  docker push {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
-                fi
+                # Push latest tag
+                docker tag \$REGISTRY/\$ORGANIZATION/{{ $image.repository }}:\$TAG {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
+                docker push {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }};
 
                 docker push {{ $root.Values.registry.address }}/{{ $image.organization }}/{{ $image.repository }}:\$USER_REPO_TAG
               """)
