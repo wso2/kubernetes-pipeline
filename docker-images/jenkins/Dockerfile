@@ -15,10 +15,6 @@
 FROM jenkins/jenkins:lts
 USER root
 
-#Pre-Install Jenkins Plugins
-COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
-RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
-
 # Install Docker
 RUN apt-get update && apt-get install software-properties-common apt-transport-https ca-certificates -y; \
 curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -;\
@@ -47,3 +43,7 @@ RUN unzip /wso2am-micro-gw-toolkit-3.0.1.zip && \
 rm /wso2am-micro-gw-toolkit-3.0.1.zip
 
 ENV PATH="${PATH}:/wso2am-micro-gw-toolkit-3.0.1/bin:/usr/local/apache-jmeter-5.1/bin"
+
+#Pre-Install Jenkins Plugins
+COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
+RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
