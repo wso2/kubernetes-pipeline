@@ -25,9 +25,6 @@ curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -;\
 add-apt-repository  "deb [arch=amd64] https://download.docker.com/linux/debian  $(lsb_release -cs) stable";\
 apt-get update && apt-get install docker-ce -y
 
-# Install maven
-RUN apt-get install maven -y
-
 # Install Helm
 RUN curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh && \
 chmod 700 get_helm.sh && \
