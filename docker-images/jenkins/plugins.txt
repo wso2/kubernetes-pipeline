@@ -10,3 +10,5 @@ git-server:1.7
 git:4.0.0
 jsch:0.1.55.1
 trilead-api:1.0.5
+blueocean:1.21.0
+blueocean-dashboard:1.21.0

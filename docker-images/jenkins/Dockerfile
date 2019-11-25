@@ -39,8 +39,7 @@ usermod -aG sudo jenkins
 
 # Install microgateway toolkit
 COPY wso2am-micro-gw-toolkit-3.0.1.zip /wso2am-micro-gw-toolkit-3.0.1.zip
-RUN unzip /wso2am-micro-gw-toolkit-3.0.1.zip && \
-rm /wso2am-micro-gw-toolkit-3.0.1.zip
+RUN unzip /wso2am-micro-gw-toolkit-3.0.1.zip
 
 ENV PATH="${PATH}:/wso2am-micro-gw-toolkit-3.0.1/bin:/usr/local/apache-jmeter-5.1/bin"
 
