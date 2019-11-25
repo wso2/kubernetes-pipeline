@@ -46,3 +46,5 @@ ENV PATH="${PATH}:/wso2am-micro-gw-toolkit-3.0.1/bin:/usr/local/apache-jmeter-5.
 #Pre-Install Jenkins Plugins
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
+
+USER jenkins
