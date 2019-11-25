@@ -12,36 +12,42 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM jenkins/jenkins:lts
+FROM jenkins/jenkins:2.190.3
+LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>"
+
 USER root
 
 # Install Docker
-RUN apt-get update && apt-get install software-properties-common apt-transport-https ca-certificates -y; \
-curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -;\
-add-apt-repository  "deb [arch=amd64] https://download.docker.com/linux/debian  $(lsb_release -cs) stable";\
-apt-get update && apt-get install docker-ce -y
+RUN \
+    apt-get update \
+    && apt-get install -y \
+        apt-transport-https \
+        ca-certificates \
+        software-properties-common \ 
+    && curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - \
+    && add-apt-repository  "deb [arch=amd64] https://download.docker.com/linux/debian  $(lsb_release -cs) stable" \
+    && apt-get update \
+    && apt-get install docker-ce -y \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Helm
-RUN curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh && \
-chmod 700 get_helm.sh && \
-./get_helm.sh && \
-rm get_helm.sh
-
-# Install Jmeter
-RUN wget https://www-us.apache.org/dist//jmeter/binaries/apache-jmeter-5.1.tgz && \
-tar -C /usr/local -xzf apache-jmeter-5.1.tgz && \
-rm apache-jmeter-5.1.tgz
+RUN \
+    curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh \
+    && chmod 700 get_helm.sh \
+    && ./get_helm.sh \
+    && rm get_helm.sh
 
 # Grant jenkins user group access to /var/run/docker.sock
-RUN addgroup --gid 1001 dsock && \
-gpasswd -a jenkins dsock && \
-usermod -aG sudo jenkins
+RUN \
+    addgroup --gid 1001 dsock \
+    && gpasswd -a jenkins dsock \
+    && usermod -aG sudo jenkins
 
 # Install microgateway toolkit
 COPY wso2am-micro-gw-toolkit-3.0.1.zip /wso2am-micro-gw-toolkit-3.0.1.zip
 RUN unzip /wso2am-micro-gw-toolkit-3.0.1.zip
 
-ENV PATH="${PATH}:/wso2am-micro-gw-toolkit-3.0.1/bin:/usr/local/apache-jmeter-5.1/bin"
+ENV PATH="${PATH}:/wso2am-micro-gw-toolkit-3.0.1/bin"
 
 #Pre-Install Jenkins Plugins
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
