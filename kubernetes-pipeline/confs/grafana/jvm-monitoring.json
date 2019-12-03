@@ -2082,7 +2082,9 @@
   "schemaVersion": 18,
   "style": "dark",
   "tags": [
-    "JVM"
+    "JVM",
+    "WSO2",
+    "prometheus"
   ],
   "templating": {
     "list": [
