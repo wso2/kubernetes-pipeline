@@ -19,7 +19,7 @@ wso2Password: ""
 # Admin credentials of jenkins instance to be created
 jenkins:
   username: admin
-  password: admin
+  password: jenkins_admin
   ingress:
     host: jenkins.example.com
 
