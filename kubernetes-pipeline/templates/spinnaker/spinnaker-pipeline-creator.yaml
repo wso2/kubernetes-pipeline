@@ -56,8 +56,13 @@ spec:
           name: spinnaker-conf
   
 ---
-
 {{- $files := .Files }}
+{{- $username := $root.Values.registry.username }}
+{{- $password := $root.Values.registry.password }}
+{{- $email := $root.Values.registry.email }}
+{{- $regId := $root.Values.registry.server }}
+{{- $auth := printf "%s:%s" $username $password | b64enc }}
+{{- $dockerconfigjson := $files.Get "auth.json" | replace "reg.id" $regId | replace "reg.username" $username | replace "reg.password" $password | replace "reg.email" $email | replace "reg.auth" $auth | b64enc }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -362,6 +367,7 @@ data:
             }
             {{- end }}
         ]
+
     }
 
   {{ .name }}-deploy-dev.json: |-
@@ -455,7 +461,7 @@ data:
                 },
                 "requiredArtifactIds": [
                     {{- range $index, $image := .images }}
-                    {{if ne $index 0}},{{end}}"{{- $index}}"
+                    {{ if ne $index 0 }},{{ end }}"{{- $index}}"
                     {{- end }}
                 ],
                 "requisiteStageRefIds": [
@@ -492,12 +498,6 @@ data:
                         }
                     },
                     {
-                        {{- $username := $root.Values.registry.username }}
-                        {{- $password := $root.Values.registry.password }}
-                        {{- $email := $root.Values.registry.email }}
-                        {{- $regId := $root.Values.registry.server }}
-                        {{- $auth := printf "%s:%s" $username $password | b64enc }}
-                        {{- $files := $root.Files }}
                         "apiVersion": "v1",
                         "kind": "Secret",
                         "metadata": {
@@ -509,7 +509,7 @@ data:
                         },
                         "type" : "kubernetes.io/dockerconfigjson",
                         "data": {
-                            ".dockerconfigjson": "{{ $files.Get "auth.json" | replace "reg.id" $regId | replace "reg.username" $username | replace "reg.password" $password | replace "reg.email" $email | replace "reg.auth" $auth | b64enc }}"
+                            ".dockerconfigjson": "{{ $dockerconfigjson }}"
                         }
                     }
                 ],
@@ -627,12 +627,6 @@ data:
                         }
                     },
                     {
-                        {{- $username := $root.Values.registry.username }}
-                        {{- $password := $root.Values.registry.password }}
-                        {{- $email := $root.Values.registry.email }}
-                        {{- $regId := $root.Values.registry.server }}
-                        {{- $auth := printf "%s:%s" $username $password | b64enc }}
-                        {{- $files := $root.Files }}
                         "apiVersion": "v1",
                         "kind": "Secret",
                         "metadata": {
@@ -644,7 +638,7 @@ data:
                         },
                         "type" : "kubernetes.io/dockerconfigjson",
                         "data": {
-                            ".dockerconfigjson": "{{ $files.Get "auth.json" | replace "reg.id" $regId | replace "reg.username" $username | replace "reg.password" $password | replace "reg.email" $email | replace "reg.auth" $auth | b64enc }}"
+                            ".dockerconfigjson": "{{ $dockerconfigjson }}"
                         }
                     }
                 ],
@@ -679,7 +673,7 @@ data:
                 },
                 "requiredArtifactIds": [
                     {{- range $index, $image := .images }}
-                    {{if ne $index 0}},{{end}}"{{- $index}}"
+                    {{ if ne $index 0 }},{{ end }}"{{- $index}}"
                     {{- end }}
                 ],
                 "requisiteStageRefIds": [
@@ -763,19 +757,19 @@ data:
             {{- range $index, $image := .images }}
             {{- $imageName := printf "%s/%s/%s" $root.Values.registry.address $image.organization $image.repository }}
             ,{
-            "defaultArtifact": {
-                "customKind": true,
-                "id": "d0960d0c-5294-408d-a24b-81ec1537abd8"
-            },
-            "displayName": "{{- $imageName}}",
-            "id": "{{- $index}}",
-            "matchArtifact": {
-                "id": "152022db-5a95-4963-a88c-3e7f3e31af01",
-                "name": "{{- $imageName}}",
-                "type": "docker/image"
-            },
-            "useDefaultArtifact": false,
-            "usePriorArtifact": true
+              "defaultArtifact": {
+                  "customKind": true,
+                  "id": "d0960d0c-5294-408d-a24b-81ec1537abd8"
+              },
+              "displayName": "{{- $imageName}}",
+              "id": "{{- $index}}",
+              "matchArtifact": {
+                  "id": "152022db-5a95-4963-a88c-3e7f3e31af01",
+                  "name": "{{- $imageName}}",
+                  "type": "docker/image"
+              },
+              "useDefaultArtifact": false,
+              "usePriorArtifact": true
             }
             {{- end }}
         ],
@@ -796,12 +790,6 @@ data:
                         }
                     },
                     {
-                        {{- $username := $root.Values.registry.username }}
-                        {{- $password := $root.Values.registry.password }}
-                        {{- $email := $root.Values.registry.email }}
-                        {{- $regId := $root.Values.registry.server }}
-                        {{- $auth := printf "%s:%s" $username $password | b64enc }}
-                        {{- $files := $root.Files }}
                         "apiVersion": "v1",
                         "kind": "Secret",
                         "metadata": {
@@ -813,7 +801,7 @@ data:
                         },
                         "type" : "kubernetes.io/dockerconfigjson",
                         "data": {
-                            ".dockerconfigjson": "{{ $files.Get "auth.json" | replace "reg.id" $regId | replace "reg.username" $username | replace "reg.password" $password | replace "reg.email" $email | replace "reg.auth" $auth | b64enc }}"
+                            ".dockerconfigjson": "{{ $dockerconfigjson }}"
                         }
                     }
                 ],
@@ -833,30 +821,30 @@ data:
                 "versioned": null
             },
             {
-            "account": "default",
-            "cloudProvider": "kubernetes",
-            "manifestArtifactAccount": "embedded-artifact",
-            "manifestArtifactId": "4397cbfc-50f8-4244-b721-2a35d8e04715",
-            "moniker": {
-                "app": "{{ .name }}"
-            },
-            "name": "Deploy (Manifest) Production",
-            "refId": "4",
-            "relationships": {
-                "loadBalancers": [],
-                "securityGroups": []
-            },
-            "requiredArtifactIds": [
-                {{- range $index, $image := .images }}
-                {{if ne $index 0}},{{end}}"{{- $index}}"
-                {{- end }}
-            ],
-            "requisiteStageRefIds": [
-                "8"
-            ],
-            "skipExpressionEvaluation": true,
-            "source": "artifact",
-            "type": "deployManifest"
+              "account": "default",
+              "cloudProvider": "kubernetes",
+              "manifestArtifactAccount": "embedded-artifact",
+              "manifestArtifactId": "4397cbfc-50f8-4244-b721-2a35d8e04715",
+              "moniker": {
+                  "app": "{{ .name }}"
+              },
+              "name": "Deploy (Manifest) Production",
+              "refId": "4",
+              "relationships": {
+                  "loadBalancers": [],
+                  "securityGroups": []
+              },
+              "requiredArtifactIds": [
+                  {{- range $index, $image := .images }}
+                  {{ if ne $index 0 }},{{ end }}"{{- $index}}"
+                  {{- end }}
+              ],
+              "requisiteStageRefIds": [
+                  "8"
+              ],
+              "skipExpressionEvaluation": true,
+              "source": "artifact",
+              "type": "deployManifest"
             }
         ],
         "triggers": [
