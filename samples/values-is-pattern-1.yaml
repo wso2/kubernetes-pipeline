@@ -23,7 +23,7 @@ registry:
   username: &reg_username <REGISTRY_USERNAME>
   password: &reg_password <REGISTRY_PASSWORD>
   email: &reg_email <REGISTRY_EMAIL>
-  address: &reg_email index.docker.io
+  address: &reg_address index.docker.io
   # Add each repositories that would be used in the deployment
   repositories:
     &reg_repos
