@@ -36,9 +36,9 @@ metadata:
 spec:
   tls:
   - hosts:
-    - jenkins
+    - {{ .Values.jenkins.ingress.host }}
   rules:
-  - host: jenkins
+  - host: {{ .Values.jenkins.ingress.host }}
     http:
       paths:
       - path: /
