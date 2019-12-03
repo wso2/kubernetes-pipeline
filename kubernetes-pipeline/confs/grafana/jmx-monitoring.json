@@ -2084,7 +2084,8 @@
   "schemaVersion": 14,
   "style": "dark",
   "tags": [
-    "JVM",
+    "JMX",
+    "WSO2",
     "prometheus"
   ],
   "templating": {
