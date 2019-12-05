@@ -21,7 +21,16 @@ jenkins:
   username: admin
   password: jenkins_admin
   ingress:
+    enabled: true
     host: jenkins.example.com
+    annotations:
+      ingress.kubernetes.io/ssl-redirect: 'true'
+      kubernetes.io/ingress.class: nginx
+      kubernetes.io/tls-acme: "true"
+#    tls:
+#      - secretName: -tls
+#        hosts:
+#          - example.com
 
 registry:
   server: 'https://index.docker.io/v1/'
@@ -46,7 +55,7 @@ spinnaker:
         enable_ci.sh: |-
           echo "Configuring jenkins master"
           USERNAME="admin"
-          PASSWORD="admin"
+          PASSWORD="jenkins_admin"
           $HAL_COMMAND config ci jenkins enable
           echo $PASSWORD | $HAL_COMMAND config ci jenkins master edit master --address http://jenkins-service.{{ .Release.Namespace }}.svc.cluster.local:8080 --username $USERNAME --password || echo $PASSWORD | $HAL_COMMAND config ci jenkins master add master --address http://jenkins-service.{{ .Release.Namespace }}.svc.cluster.local:8080 --username $USERNAME --password
           $HAL_COMMAND config features edit --pipeline-templates true
@@ -57,10 +66,10 @@ spinnaker:
       ingress.kubernetes.io/ssl-redirect: 'true'
       kubernetes.io/ingress.class: nginx
       kubernetes.io/tls-acme: "true"
-    tls:
-      - secretName: '-tls'
-        hosts:
-          - example.com
+#    tls:
+#      - secretName: -tls
+#        hosts:
+#          - example.com
   ingressGate:
     enabled: true
     host: gate.spinnaker.example.com
@@ -68,10 +77,10 @@ spinnaker:
       ingress.kubernetes.io/ssl-redirect: 'true'
       kubernetes.io/ingress.class: nginx
       kubernetes.io/tls-acme: "true"
-    tls:
-     - secretName: -tls
-       hosts:
-         - example.com
+#    tls:
+#     - secretName: -tls
+#       hosts:
+#         - example.com
 
 kibana:
   nameOverride: "kibana"
@@ -80,9 +89,10 @@ kibana:
     enabled: true
     hosts:
       - kibana.example.com
-    tls:
-      - hosts:
-          - example.com
+#    tls:
+#      - hosts:
+#          - example.com
+#        secretName: -tls
           
 elasticsearch:
   minimumMasterNodes: 1
@@ -121,7 +131,11 @@ prometheus-operator:
       annotations: 
         kubernetes.io/ingress.class: nginx
       hosts:
-        - grafana.example.com
+      - grafana.example.com
+#      tls:
+#        - hosts:
+#            - example.com
+#          secretName: -tls
 
 nodeExporter:
   enabled: false
