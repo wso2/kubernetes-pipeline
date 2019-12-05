@@ -1,3 +1,9 @@
+{{ $jenkins_host := .Values.jenkins.ingress.host }}
+{{ $spinnaker_host := .Values.spinnaker.ingress.host }}
+{{ $spinnaker_gate_host := .Values.spinnaker.ingressGate.host }}
+{{ $grafana_host := index (index .Values "prometheus-operator" "grafana" "ingress" "hosts") 0 }}
+{{ $kibana_host := index .Values.kibana.ingress.hosts 0 }}\
+
 Thank you for installing WSO2 Kubernetes Pipeline.
 
 Please follow these steps to access the pipeline tools in the environment.
@@ -6,19 +12,20 @@ Please follow these steps to access the pipeline tools in the environment.
 
   kubectl get ing -n {{ .Release.Namespace }}
 
-    NAME                                  HOSTS                       ADDRESS           PORTS       AGE
-    <RELEASE_NAME>-grafana                grafana.example.com         <EXTERNAL_IP>     80          20m
-    <RELEASE_NAME>-kibana                 kibana.example.com          <EXTERNAL_IP>     80          20m
-    <RELEASE_NAME>-spinnaker-deck         spinnaker.example.com       <EXTERNAL_IP>     80, 443     20m
-    <RELEASE_NAME>-spinnaker-gate         gate.spinnaker.example.com  <EXTERNAL_IP>     80, 443     20m
-    jenkins-ingress                       jenkins.example.com         <EXTERNAL_IP>     80, 443     20m
+    NAME                                  HOSTS                             ADDRESS           PORTS       AGE
+    jenkins-ingress                       {{ $jenkins_host }}               <EXTERNAL_IP>     80, 443     20m
+    <RELEASE_NAME>-spinnaker-deck         {{ $spinnaker_host }}             <EXTERNAL_IP>     80, 443     20m
+    <RELEASE_NAME>-spinnaker-gate         {{ $spinnaker_gate_host }}        <EXTERNAL_IP>     80, 443     20m
+    <RELEASE_NAME>-grafana                {{ $grafana_host }}               <EXTERNAL_IP>     80, 443     20m
+    <RELEASE_NAME>-kibana                 {{ $kibana_host }}                <EXTERNAL_IP>     80, 443     20m
 
-2. Add the above host as an entry in /etc/hosts file as follows:
+2. Add the above hosts as an entry in /etc/hosts file as follows:
 
-    <EXTERNAL-IP> grafana.example.com kibana.example.com spinnaker.example.com gate.spinnaker.example.com jenkins.example.com
+    <EXTERNAL-IP> {{ $jenkins_host }} {{ $spinnaker_host }} {{ $spinnaker_gate_host }} {{ $grafana_host }} {{ $kibana_host }}
 
 3. Navigate to the following URLs on any web browser to access the pipeline tools
-    - https://jenkins.example.com
-    - https://spinnaker.example.com
-    - https://kibana.example.com
-    - https://grafana.example.com
+    - https://{{ $jenkins_host }}
+    - https://{{ $spinnaker_host }}
+    - https://{{ $spinnaker_gate_host }}
+    - https://{{ $grafana_host }}
+    - https://{{ $kibana_host }}
