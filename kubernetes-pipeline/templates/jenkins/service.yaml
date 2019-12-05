@@ -27,21 +27,26 @@ spec:
 
 ---
 
+{{- if .Values.jenkins.ingress.enabled }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: jenkins-ingress
+{{- if .Values.jenkins.ingress.annotations }}
   annotations:
-    kubernetes.io/ingress.class: "nginx"
+{{ toYaml .Values.jenkins.ingress.annotations | indent 4 }}
+{{- end }}
+  name: jenkins-ingress
 spec:
-  tls:
-  - hosts:
-    - {{ .Values.jenkins.ingress.host }}
   rules:
-  - host: {{ .Values.jenkins.ingress.host }}
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: jenkins-service
-          servicePort: 8080
+    - host: {{ .Values.jenkins.ingress.host | quote }}
+      http:
+        paths:
+        - path: /
+          backend:
+            serviceName: jenkins-service
+            servicePort: 8080
+  {{- if .Values.jenkins.ingress.tls }}
+  tls:
+{{ toYaml .Values.jenkins.ingress.tls | indent 4 }}
+{{- end -}}
+{{- end }}
