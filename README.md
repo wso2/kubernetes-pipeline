@@ -26,6 +26,10 @@ Use the following, **Getting Started** guides to install the Kubernetes Pipeline
 
 * [Getting Started with Kubernetes Pipeline for WSO2 API Management](docs/getting-started-mgw.md)
 
+## Advanced Topics
+
+* [Using ingress with SSL/TLS](./docs/advanced/using-ingress-with-tls.md)
+
 ## How You Can Contribute
 
 For detailed information on how you can contribute to this Git repository, please refer [this](CONTRIBUTING.md) documentation.
