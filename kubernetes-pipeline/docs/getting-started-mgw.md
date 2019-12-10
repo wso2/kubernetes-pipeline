@@ -18,7 +18,7 @@ Before you begin to develop your pipeline, set up the following prerequisites in
 
 ### Deploy the CI/CD pipeline
 
-1. Download the [sample values.yaml](../samples/values-mgw.yaml) file and replace the placeholders with their respective values.
+1. Download the [sample values.yaml](../../samples/values-mgw.yaml) file and replace the placeholders with their respective values.
 
     - <WSO2_SUBSCRIPTION_USERNAME>
     - <WSO2_SUBSCRIPTION_PASSWORD>
