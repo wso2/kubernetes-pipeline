@@ -1,8 +1,18 @@
 # Helm Resources for WSO2 Kubernetes Pipeline
 
-*Helm resources for container-based deployments of WSO2 Kubernetes Pipeline for WSO2 products*
+WSO2 Kubernetes Pipeline provides tools and a preconfigured pipeline used for continuous integration and deployment.
+The setup is deployed on top of Kubernetes using Helm, which makes the processes of configuring, installing, scaling and upgrading, quite simple.
 
-* [Kubernetes Pipeline Helm Chart](kubernetes-pipeline/README.md)
+Following are the tools used to install and monitor the pipeline
+
+- Jenkins: For continuous integration
+- Spinnaker: For continuous deployment to Kubernetes
+- ELK: For centralized logging
+- Prometheus Operator: For monitoring deployments and visualization using Grafana
+
+![Architecture Diagram](kubernetes-pipeline/pipeline_architecture.jpg)
+
+Read more about Installing and configuring the Kubernetes Pipeline Helm Chart [here](kubernetes-pipeline/README.md#installation)
 
 ## How You Can Contribute
 
