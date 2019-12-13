@@ -2,33 +2,92 @@
 
 ## Chart Details
 
-- WSO2 Kubernetes Pipeline provides tools and a preconfigured pipeline used for continuous integration and deployment.
+WSO2 Kubernetes Pipeline provides tools and a preconfigured pipeline used for continuous integration and deployment.
 The setup is deployed on top of Kubernetes using Helm, which makes the processes of configuring, installing, scaling and upgrading, quite simple.
 
-- Following are the tools used to install and monitor the pipeline
+Following are the tools used to install and monitor the pipeline
 
-  - Jenkins: For continuous integration
-  - Spinnaker: For continuous deployment to Kubernetes
-  - ELK: For centralized logging
-  - Prometheus Operator: For monitoring deployments and visualization using Grafana
+- Jenkins: For continuous integration
+- Spinnaker: For continuous deployment to Kubernetes
+- ELK: For centralized logging
+- Prometheus Operator: For monitoring deployments and visualization using Grafana
 
 ![Architecture Diagram](pipeline_architecture.jpg)
 
 ## Installation
 
-Use the following, **Getting Started** guides to install the Kubernetes Pipeline, for the respective WSO2 product.
+### Prerequisites
 
-* [Getting Started with Kubernetes Pipeline for WSO2 Enterprise Integration](docs/getting-started-ei.md)
+- Install and set up Helm.
 
-* [Getting Started with Kubernetes Pipeline for WSO2 Identity and Access Management](docs/getting-started-is.md)
+- Install NGINX Ingress Controller.
 
-* [Getting Started with Kubernetes Pipeline for WSO2 API Management](docs/getting-started-mgw.md)
+### Deploy the CI/CD pipeline
+
+1. Download the sample `values.yaml` of the desired product
+
+    * [WSO2 Enterprise Integrator](samples/values-ei-pattern-1.yaml)
+    * [WSO2 Identity and Access Management](samples/values-is-pattern-1.yaml)
+    * [WSO2 API Microgateway](samples/values-mgw.yaml)
+
+2. Replace the placeholders with their respective values in the `values.yaml`.
+
+    - <WSO2_SUBSCRIPTION_USERNAME>
+    - <WSO2_SUBSCRIPTION_PASSWORD>
+    - <REGISTRY_USERNAME>
+    - <REGISTRY_PASSWORD>
+    - <REGISTRY_EMAIL>
+    - \<EMAIL>
+    - <GITHUB_USERNAME>
+    - <GITHUB_PASSWORD>
+
+3. Add the WSO2 Helm repository.
+
+    ```
+    helm repo add wso2 https://helm.wso2.com
+    helm repo update
+    ```
+
+4. Install the pipeline Helm chart by referring to the updated `values.yaml` file.
+
+    ```
+    helm install --name <RELEASE_NAME> wso2/kubernetes-pipeline -f values.yaml --namespace <NAMESPACE>
+    ```
+
+> In the following steps, `example.com` refers to the default domain name. 
+> If the default host has been overridden, change the domain name accordingly.
+
+5. Obtain the external IP (`EXTERNAL-IP`) of the Ingress resources by listing down the Kubernetes Ingresses.
+
+    ```
+    kubectl get ing -n <NAMESPACE>
+
+    NAME                            HOSTS                       ADDRESS            PORTS       AGE
+    <RELEASE_NAME>-grafana          grafana.example.com         <EXTERNAL_IP>       80          20m
+    <RELEASE_NAME>-kibana           kibana.example.com          <EXTERNAL_IP>       80          20m
+    <RELEASE_NAME>-spinnaker-deck   spinnaker.example.com       <EXTERNAL_IP>       80, 443     20m
+    <RELEASE_NAME>-spinnaker-gate   gate.spinnaker.example.com  <EXTERNAL_IP>       80, 443     20m
+    jenkins-ingress                 jenkins.example.com         <EXTERNAL_IP>       80, 443     20m
+    ```
+
+6. Add the above hosts as an entry in `/etc/hosts` as follows:
+
+    ```
+    <EXTERNAL_IP>  grafana.example.com kibana.example.com spinnaker.example.com jenkins.example.com
+    ```
+
+7. Navigate to the following URLs on any web browser:
+
+    - https://jenkins.example.com
+    - https://spinnaker.example.com
+    - https://grafana.example.com
+    - https://kibana.example.com
 
 ## Change domain
 
 To customize the domain name override the host values as shown in the example below.
 
-> example.com refers to the domain name
+> `example.com` refers to the domain name
 
 ```yaml
 jenkins:
