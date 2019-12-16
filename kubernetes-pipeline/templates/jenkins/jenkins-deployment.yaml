@@ -41,7 +41,7 @@ spec:
         - name: helm-conf
           mountPath: "/root/.helm"
       containers:
-      - image: {{ .Values.image }}
+      - image: {{ .Values.jenkins.image.repository }}:{{ .Values.jenkins.image.tag }}
         name: jenkins
         env:
         - name: JAVA_OPTS
