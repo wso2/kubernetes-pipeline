@@ -190,3 +190,32 @@ github:
   username: <GITHUB_USERNAME>
   password: <PERSONAL_ACCESS_TOKEN>
 ```
+
+## Change credentials for Jenkins administrator
+
+Jenkins starts up with an administrative user by default. 
+The password for this account could be changed by overriding the values as shown below.
+
+```yaml
+jenkins:
+  username: <JENKINS_USERNAME>
+  password: <JENKINS_PASSWORD>
+```
+
+In addition to this, we need to configure Spinnaker to authenticate with Jenkins since it would be used to run tests.
+This could be done by overriding the additional scripts section to change the default credentials indicated by `JENKINS_USERNAME` and `JENKINS_PASSWORD`.
+
+```yaml
+spinnaker:
+  halyard:
+    additionalScripts:
+      create: true
+      data:
+        enable_ci.sh: |-
+          echo "Configuring jenkins master"
+          USERNAME="<JENKINS_USERNAME>"
+          PASSWORD="<JENKINS_PASSWORD>"
+          $HAL_COMMAND config ci jenkins enable
+          echo $PASSWORD | $HAL_COMMAND config ci jenkins master edit master --address http://jenkins-service.{{ .Release.Namespace }}.svc.cluster.local:8080 --username $USERNAME --password || echo $PASSWORD | $HAL_COMMAND config ci jenkins master add master --address http://jenkins-service.{{ .Release.Namespace }}.svc.cluster.local:8080 --username $USERNAME --password
+          $HAL_COMMAND config features edit --pipeline-templates true
+```
