@@ -12,12 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-image: 'wso2/kubernetes-pipeline-jenkins:latest'
 wso2Username: ""
 wso2Password: ""
 
-# Admin credentials of jenkins instance to be created
+
 jenkins:
+  image:
+    repository: "wso2/kubernetes-pipeline-jenkins"
+    tag: "latest"
+  # Admin credentials of jenkins instance to be created
   username: admin
   password: jenkins_admin
   ingress:
