@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# WSO2 subscription parameters. If you do not have an active subscription, do not provide values for the parameters.
+# If you do not possess an active WSO2 subscription already, you can sign up for a WSO2 Free Trial Subscription at (https://wso2.com/free-trial-subscription).
 wso2Username: ""
 wso2Password: ""
 
@@ -35,6 +37,7 @@ jenkins:
 #        hosts:
 #          - example.com
 
+# This section is used to configure access to the docker repository where Jenkins will push images to.
 registry:
   server: 'https://index.docker.io/v1/'
   username: <REGISTRY_USERNAME>
@@ -42,19 +45,32 @@ registry:
   email: <REGISTRY_EMAIL>
   address: index.docker.io
 
+# Github credentials
+# An access token could be used instead of the password for controlling access.
 github:
   username: <GITHUB_USERNAME>
   password: <GITHUB_PASSWORD>
 
 # Values for Spinnaker chart
 spinnaker:
+# Configure your Docker registries here to be used by Spinnaker
+#  dockerRegistries:
+#    - name: dockerhub
+#      address: index.docker.io
+#      username: <REGISTRY_USERNAME>
+#      password: <REGISTRY_PASSWORD>
+#      email: <REGISTRY_EMAIL>
+#      repositories:
+#        - org/repo
   halyard:
-    spinnakerVersion: 1.15.2
+    spinnakerVersion: 1.17.3
     # image:
     #   tag: 1.20.2
     additionalScripts:
       create: true
       data:
+        # This script is used to configure the Jenkins master with Spinnaker.
+        # USERNAME and PASSWORD should match the credentials given in the jenkins tag
         enable_ci.sh: |-
           echo "Configuring jenkins master"
           USERNAME="admin"
