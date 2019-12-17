@@ -230,41 +230,6 @@ data:
             steps {
               shell(
               """
-              removeTests() {
-                if [ -z is-./ ]; then
-                  for f in *
-                  do
-                      # Extract chart and get name
-                      if [ -d \$f ]; then 
-                          echo "\$f is a directory"
-                          CHART_NAME=\$f
-                      else
-                          echo "\$f is not a directory"
-                          tar -zxf \$f
-                          CHART_NAME=`tar -tzf \$f | head -1 | cut -f1 -d"/"`
-                          rm -r \$f
-                      fi
-
-                      # Remove tests folder
-                      if [ -d \$CHART_NAME/templates/tests ]; then
-                          echo "Removing \$CHART_NAME/templates/tests"
-                          rm -r \$CHART_NAME/templates/tests
-                      fi
-
-                      if [ -d \$CHART_NAME/charts ]; then
-                          echo "Dependencies for chart \$CHART_NAME"
-                          cd \$CHART_NAME/charts && 
-                          removeTests 
-                          cd ../../
-                      else
-                          echo "No dependencies for chart \$CHART_NAME"
-                      fi
-                  done;
-                else
-                  echo "Skipping empty directory `pwd`"
-                fi
-              }
-
               cat {{ .chart.name }}/values-dev.yaml | base64 >test
               VALUES_DEV_CONTENT=`tr -d '\\n' < test`
 
@@ -282,14 +247,6 @@ data:
               helm repo update
               helm fetch wso2/{{ .chart.name }} --version {{ .chart.version }}
               {{- end }}
-
-              tar -zxf {{ .chart.name }}-*.tgz
-              if [ -d {{ .chart.name }}/charts ]; then
-              cd {{ .chart.name }}/charts
-              removeTests
-              cd ../../
-              fi
-              helm package {{ .chart.name }}
 
               CHART_NAME=`find {{ .chart.name }}-*.tgz`
               cat \$CHART_NAME | base64 > test
