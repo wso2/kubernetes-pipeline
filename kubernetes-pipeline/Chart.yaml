@@ -13,7 +13,7 @@
 # limitations under the License.
 
 apiVersion: v1
-appVersion: "1.0"
+appVersion: "1.0.0"
 description: A Helm chart to deploy a CI/CD Pipeline in a Kubernetes environment for WSO2 products.
 name: kubernetes-pipeline
-version: 0.1.2
+version: 1.0.0

@@ -1,7 +1,14 @@
 # Changelog
-All notable changes to this project 0.1.x per each release will be documented in this file.
+All notable changes to this project 1.0.x per each release will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
+
+## [v1.0.0] - 2019-12-17
+
+- Add advanced documentation topics
+- Fix inconsistent grafana dashboard labels
+- Change default hostnames to include example.com
+- Upgrade dependency charts
 
 ## [v0.1.2] - 2019-11-04
 
@@ -30,8 +37,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Configure Jenkins instance to support WSO2 Kubernetes Pipeline
 
 For detailed information on the tasks carried out during this release, please see the GitHub milestone
-[v0.1.0](https://github.com/wso2/kubernetes-pipeline/milestone/1).
+[v1.0.0](https://github.com/wso2/kubernetes-pipeline/milestone/2).
 
 [v0.1.1]: https://github.com/wso2/kubernetes-pipeline/compare/v0.1.0...v0.1.1
 
 [v0.1.2]: https://github.com/wso2/kubernetes-pipeline/compare/v0.1.1...v0.1.2
+
+[v1.0.0]: https://github.com/wso2/kubernetes-pipeline/compare/v0.1.2...v1.0.0
