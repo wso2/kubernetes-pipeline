@@ -18,7 +18,7 @@ Following are the tools used to install and monitor the pipeline
 
 ### Prerequisites
 
-- Install and set up Helm.
+- Install and set up Helm (Supported version 2.14.3)
 
 - Install NGINX Ingress Controller.
 
