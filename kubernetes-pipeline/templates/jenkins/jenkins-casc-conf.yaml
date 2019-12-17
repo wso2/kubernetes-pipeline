@@ -231,6 +231,7 @@ data:
               shell(
               """
               removeTests() {
+                if [ -z is-./ ]; then
                   for f in *
                   do
                       # Extract chart and get name
@@ -259,6 +260,9 @@ data:
                           echo "No dependencies for chart \$CHART_NAME"
                       fi
                   done;
+                else
+                  echo "Skipping empty directory `pwd`"
+                fi
               }
 
               cat {{ .chart.name }}/values-dev.yaml | base64 >test
