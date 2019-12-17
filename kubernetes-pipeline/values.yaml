@@ -52,6 +52,7 @@ github:
   password: <GITHUB_PASSWORD>
 
 # Values for Spinnaker chart
+# Refer to https://github.com/helm/charts/blob/master/stable/spinnaker/values.yaml for more information on parameters.
 spinnaker:
 # Configure your Docker registries here to be used by Spinnaker
 #  dockerRegistries:
