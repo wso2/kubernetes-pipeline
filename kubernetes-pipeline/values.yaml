@@ -32,10 +32,10 @@ jenkins:
       ingress.kubernetes.io/ssl-redirect: 'true'
       kubernetes.io/ingress.class: nginx
       kubernetes.io/tls-acme: "true"
-#    tls:
-#      - secretName: -tls
-#        hosts:
-#          - example.com
+    tls:
+      - hosts:
+          - example.com
+#        secretName: -tls
 
 # This section is used to configure access to the docker repository where Jenkins will push images to.
 registry:
