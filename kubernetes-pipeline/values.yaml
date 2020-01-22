@@ -86,10 +86,11 @@ spinnaker:
       ingress.kubernetes.io/ssl-redirect: 'true'
       kubernetes.io/ingress.class: nginx
       kubernetes.io/tls-acme: "true"
-#    tls:
-#      - secretName: -tls
-#        hosts:
-#          - example.com
+    tls:
+      - hosts:
+          - example.com
+#        secretName: -tls
+
   ingressGate:
     enabled: true
     host: gate.spinnaker.example.com
@@ -97,10 +98,10 @@ spinnaker:
       ingress.kubernetes.io/ssl-redirect: 'true'
       kubernetes.io/ingress.class: nginx
       kubernetes.io/tls-acme: "true"
-#    tls:
-#     - secretName: -tls
-#       hosts:
-#         - example.com
+    tls:
+     - hosts:
+         - example.com
+#       secretName: -tls
 
 kibana:
   nameOverride: "kibana"
@@ -109,9 +110,9 @@ kibana:
     enabled: true
     hosts:
       - kibana.example.com
-#    tls:
-#      - hosts:
-#          - example.com
+    tls:
+      - hosts:
+          - example.com
 #        secretName: -tls
           
 elasticsearch:
@@ -152,9 +153,9 @@ prometheus-operator:
         kubernetes.io/ingress.class: nginx
       hosts:
       - grafana.example.com
-#      tls:
-#        - hosts:
-#            - example.com
+      tls:
+        - hosts:
+            - example.com
 #          secretName: -tls
 
 nodeExporter:
