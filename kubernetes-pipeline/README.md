@@ -29,6 +29,7 @@ Following are the tools used to install and monitor the pipeline
     * [WSO2 Enterprise Integrator](samples/values-ei-pattern-1.yaml)
     * [WSO2 Identity and Access Management](samples/values-is-pattern-1.yaml)
     * [WSO2 API Microgateway](samples/values-mgw.yaml)
+    * [WSO2 API Micro Integrator](samples/values-mi.yaml)
 
 2. Replace the placeholders with their respective values in the `values.yaml`.
 
