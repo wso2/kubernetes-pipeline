@@ -141,7 +141,7 @@ prometheus-operator:
   prometheus:
     prometheusSpec:
       image:
-        tag: v2.9.2
+        tag: v2.13.1
   grafana:
     image:
       tag: 6.1.6
