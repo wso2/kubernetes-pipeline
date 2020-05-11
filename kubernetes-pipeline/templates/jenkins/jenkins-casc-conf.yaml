@@ -98,7 +98,7 @@ data:
                 TAG=`git rev-parse --short HEAD`
 
                 {{- if $image.wso2microIntegrator }}
-                mvn clean install -Dbase.image=\$TAGGED_BASE_IMAGE -Dtag=\$TIMESTAMP-\$TAG -Drepository=\$REGISTRY_NAME/\$REPOSITORY -Ddockerfile.build.pullNewerImage=false -Dusername=\$REGISTRY_USERNAME -Dpassword=\$WSO2_PASSWORD
+                mvn clean install -Ddockerfile.base.image=\$TAGGED_BASE_IMAGE -Ddockerfile.tag=\$TIMESTAMP-\$TAG -Ddockerfile.repository=\$REGISTRY_NAME/\$REPOSITORY -Ddockerfile.username=\$REGISTRY_USERNAME -Ddockerfile.password=\$REGISTRY_PASSWORD -Ddockerfile.build.pullNewerImage=false
                 {{- else }}
                 sed -i \"s|<BASE>|\$TAGGED_BASE_IMAGE|\" Dockerfile
                 docker build -t \$REGISTRY_NAME/\$REPOSITORY:\$TIMESTAMP-\$TAG .
@@ -161,7 +161,7 @@ data:
 
                 TAG=`git rev-parse --short HEAD`
                 {{- if $image.wso2microIntegrator }}
-                mvn clean install -Dbase.image=\$TAGGED_BASE_IMAGE -Dtag=\$TIMESTAMP-\$TAG -Drepository=\$REGISTRY_NAME/\$REPOSITORY -Ddockerfile.build.pullNewerImage=false -Dusername=\$REGISTRY_USERNAME -Dpassword=\$WSO2_PASSWORD
+                mvn clean install -Ddockerfile.base.image=\$TAGGED_BASE_IMAGE -Ddockerfile.tag=\$TIMESTAMP-\$TAG -Ddockerfile.repository=\$REGISTRY_NAME/\$REPOSITORY -Ddockerfile.username=\$REGISTRY_USERNAME -Ddockerfile.password=\$REGISTRY_PASSWORD -Ddockerfile.build.pullNewerImage=false
                 {{- else }}
                 sed -i \"s|<BASE>|\$TAGGED_BASE_IMAGE|\" Dockerfile
                 docker build -t \$REGISTRY_NAME/\$REPOSITORY:\$TIMESTAMP-\$TAG .

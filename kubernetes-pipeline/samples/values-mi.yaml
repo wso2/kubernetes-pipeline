@@ -55,6 +55,6 @@ applications:
       - organization: *reg_username
         repository: wso2mi
         deployment: wso2microIntegrator
-        customImage:
+        wso2microIntegrator:
           baseImage: 'wso2/wso2mi:1.2.0'
-          dockerfileGitRepo: 'https://github.com/wso2-incubator/cicd-sample-docker-mi'
+          gitRepository: 'https://github.com/wso2-incubator/cicd-sample-docker-mi'
