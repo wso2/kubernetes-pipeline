@@ -76,3 +76,5 @@ COPY wso2am-micro-gw-toolkit-${MGW_TOOLKIT_VERSION} /wso2am-micro-gw-toolkit-${M
 ENV MAVEN_CONFIG="/.m2" \
     MAVEN_HOME="/usr/share/maven" \
     PATH="${PATH}:/wso2am-micro-gw-toolkit-${MGW_TOOLKIT_VERSION}/bin:/usr/local/apache-jmeter-${JEMETER_VERSION}/bin"
+
+USER jenkins
