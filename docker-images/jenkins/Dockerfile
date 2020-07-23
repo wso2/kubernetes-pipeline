@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM jenkins/jenkins:2.150.3
+FROM jenkins/jenkins:2.235.2
 
 USER root
 
@@ -38,7 +38,7 @@ RUN \
     && curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - \
     && add-apt-repository  "deb [arch=amd64] https://download.docker.com/linux/debian  $(lsb_release -cs) stable" \
     && apt-get update \
-    && apt-get install -y docker-ce=${DOCKER_VERSION}
+    && apt-get install -y docker-ce=${DOCKER_VERSION} \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Maven
