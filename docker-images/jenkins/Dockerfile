@@ -17,7 +17,7 @@ FROM jenkins/jenkins:2.150.3
 USER root
 
 ARG HELM_VERSION=v2.14.1
-ARG JEMETER_VERSION=5.1
+ARG JMETER_VERSION=5.1
 ARG MGW_TOOLKIT_VERSION=3.0.1
 ARG DOCKER_VERSION="18.06.3~ce~3-0~debian"
 ARG MAVEN_VERSION=3.6.3
@@ -59,9 +59,9 @@ RUN \
 
 # Install JMeter
 RUN \
-    wget http://archive.apache.org/dist/jmeter/binaries/apache-jmeter-${JEMETER_VERSION}.tgz \
-    && tar -C /usr/local -xzf apache-jmeter-${JEMETER_VERSION}.tgz \
-    && rm apache-jmeter-${JEMETER_VERSION}.tgz
+    wget http://archive.apache.org/dist/jmeter/binaries/apache-jmeter-${JMETER_VERSION}.tgz \
+    && tar -C /usr/local -xzf apache-jmeter-${JMETER_VERSION}.tgz \
+    && rm apache-jmeter-${JMETER_VERSION}.tgz
 
 # Grant jenkins user group access to /var/run/docker.sock
 RUN \
@@ -75,6 +75,6 @@ COPY wso2am-micro-gw-toolkit-${MGW_TOOLKIT_VERSION} /wso2am-micro-gw-toolkit-${M
 # Set environment variables
 ENV MAVEN_CONFIG="/.m2" \
     MAVEN_HOME="/usr/share/maven" \
-    PATH="${PATH}:/wso2am-micro-gw-toolkit-${MGW_TOOLKIT_VERSION}/bin:/usr/local/apache-jmeter-${JEMETER_VERSION}/bin"
+    PATH="${PATH}:/wso2am-micro-gw-toolkit-${MGW_TOOLKIT_VERSION}/bin:/usr/local/apache-jmeter-${JMETER_VERSION}/bin"
 
 USER jenkins
