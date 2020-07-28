@@ -28,7 +28,7 @@ data:
                   username: ${GITHUB_USERNAME}
                   password: ${GITHUB_PASSWORD}
     jenkins:
-      systemMessage: "WSO2 CI/CD Setup"
+      systemMessage: "Kubernetes CI/CD Pipeline for WSO2 Products"
       securityRealm:
         local:
           allowsSignup: false
