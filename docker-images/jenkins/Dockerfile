@@ -16,7 +16,7 @@ FROM jenkins/jenkins:2.235.2
 
 USER root
 
-ARG HELM_VERSION=v2.16.7
+ARG HELM_VERSION=v3.2.4
 ARG JMETER_VERSION=5.1
 ARG MGW_TOOLKIT_VERSION=3.0.1
 ARG DOCKER_VERSION="18.06.3~ce~3-0~debian"
@@ -48,10 +48,10 @@ RUN \
 
 # Install Helm
 RUN \
-    curl https://raw.githubusercontent.com/helm/helm/${HELM_VERSION}/scripts/get > get_helm.sh \
-    && chmod 700 get_helm.sh \
-    && ./get_helm.sh --version ${HELM_VERSION} \
-    && rm get_helm.sh
+    wget https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz \
+    && tar -zxvf helm-${HELM_VERSION}-linux-amd64.tar.gz \
+    && mv linux-amd64/helm /usr/local/bin/helm \
+    && rm -r linux-amd64
 
 # Install JMeter
 RUN \
