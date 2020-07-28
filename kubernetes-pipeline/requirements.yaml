@@ -1,6 +1,6 @@
 dependencies:
 - name: spinnaker
-  version: 1.22.0
+  version: 1.23.0
   repository: https://kubernetes-charts.storage.googleapis.com
   condition: redis.enabled
 - name: prometheus-operator
