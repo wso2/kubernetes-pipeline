@@ -21,7 +21,7 @@ wso2Password: ""
 jenkins:
   image:
     repository: "wso2/kubernetes-pipeline-jenkins"
-    tag: "latest"
+    tag: "1.1.0"
   # Admin credentials of jenkins instance to be created
   username: admin
   password: jenkins_admin
