@@ -2,7 +2,7 @@
 {{ $spinnaker_host := .Values.spinnaker.ingress.host }}
 {{ $spinnaker_gate_host := .Values.spinnaker.ingressGate.host }}
 {{ $grafana_host := index (index .Values "prometheus-operator" "grafana" "ingress" "hosts") 0 }}
-{{ $kibana_host := index .Values.kibana.ingress.hosts 0 }}\
+{{ $kibana_host := index .Values.kibana.ingress.hosts 0 }}
 
 Thank you for installing WSO2 Kubernetes Pipeline.
 
