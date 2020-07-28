@@ -24,10 +24,6 @@ ARG MAVEN_VERSION=3.6.3
 ARG MAVEN_SHA=c35a1803a6e70a126e80b2b3ae33eed961f83ed74d18fcd16909b2d44d7dada3203f1ffe726c17ef8dcca2dcaa9fca676987befeadc9b9f759967a8cb77181c0
 ARG MAVEN_BASE_URL=https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries
 
-# Pre-Install Jenkins Plugins
-COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
-RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
-
 # Install Docker
 RUN \
     apt-get update \
@@ -71,6 +67,15 @@ RUN \
 
 # Install microgateway toolkit
 COPY wso2am-micro-gw-toolkit-${MGW_TOOLKIT_VERSION} /wso2am-micro-gw-toolkit-${MGW_TOOLKIT_VERSION}
+
+# Copy the integration test Jenkins Job specification
+COPY --chown=jenkins:jenkins config.xml /config.xml
+
+# Pre-Install Jenkins Plugins
+COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
+RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
+
+COPY --chown=root:root jenkins.sh /usr/local/bin/jenkins.sh
 
 # Set environment variables
 ENV MAVEN_CONFIG="/.m2" \
