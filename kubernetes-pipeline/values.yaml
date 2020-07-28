@@ -17,7 +17,6 @@
 wso2Username: ""
 wso2Password: ""
 
-
 jenkins:
   image:
     repository: "wso2/kubernetes-pipeline-jenkins"
@@ -64,9 +63,9 @@ spinnaker:
 #      repositories:
 #        - org/repo
   halyard:
-    spinnakerVersion: 1.17.3
-    # image:
-    #   tag: 1.20.2
+    spinnakerVersion: 1.19.13
+    image:
+      tag: 1.32.0
     additionalScripts:
       create: true
       data:
