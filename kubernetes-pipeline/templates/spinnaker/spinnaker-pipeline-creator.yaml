@@ -230,7 +230,7 @@ data:
                 },
                 "refId": "1",
                 "requisiteStageRefIds": [],
-                "templateRenderer": "HELM2",
+                "templateRenderer": "HELM3",
                 "type": "bakeManifest"
             },
             {
@@ -283,7 +283,7 @@ data:
                 },
                 "refId": "3",
                 "requisiteStageRefIds": [],
-                "templateRenderer": "HELM2",
+                "templateRenderer": "HELM3",
                 "type": "bakeManifest"
             },
             {
@@ -336,7 +336,7 @@ data:
                 },
                 "refId": "8",
                 "requisiteStageRefIds": [],
-                "templateRenderer": "HELM2",
+                "templateRenderer": "HELM3",
                 "type": "bakeManifest"
             }
         ],
