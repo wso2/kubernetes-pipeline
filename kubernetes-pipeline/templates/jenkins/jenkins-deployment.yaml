@@ -30,6 +30,7 @@ spec:
         app: jenkins
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/jenkins/jenkins-casc-conf.yaml") . | sha256sum }}
+        checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
     spec:
       serviceAccountName: jenkins
       initContainers:
