@@ -97,6 +97,7 @@
             <hudson.plugins.git.UserRemoteConfig>
                 <name>apidaemon</name>
                 <url>$REPO_URL</url>
+                <credentialsId>github_credentials</credentialsId>
             </hudson.plugins.git.UserRemoteConfig>
         </userRemoteConfigs>
         <branches>
