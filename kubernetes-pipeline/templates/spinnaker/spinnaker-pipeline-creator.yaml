@@ -454,6 +454,7 @@ data:
                     "app": "{{ .name }}"
                 },
                 "name": "Deploy (Manifest) Dev",
+                "namespaceOverride": "{{ .name }}-dev",
                 "refId": "2",
                 "relationships": {
                     "loadBalancers": [],
@@ -665,7 +666,8 @@ data:
                 "moniker": {
                     "app": "{{ .name }}"
                 },
-                "name": "Deploy (Manifest) staging",
+                "name": "Deploy (Manifest) Staging",
+                "namespaceOverride": "{{ .name }}-staging",
                 "refId": "2",
                 "relationships": {
                     "loadBalancers": [],
@@ -829,6 +831,7 @@ data:
                   "app": "{{ .name }}"
               },
               "name": "Deploy (Manifest) Production",
+              "namespaceOverride": "{{ .name }}-prod",
               "refId": "4",
               "relationships": {
                   "loadBalancers": [],
