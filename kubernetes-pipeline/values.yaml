@@ -116,7 +116,7 @@ kibana:
 elasticsearch:
   minimumMasterNodes: 1
   replicas: 1
-  imageTag: 7.3.0
+  imageTag: 7.8.1
   clusterName: wso2-elasticsearch
   persistence:
     enabled: false
