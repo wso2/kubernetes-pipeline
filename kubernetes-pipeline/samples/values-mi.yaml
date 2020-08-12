@@ -27,7 +27,7 @@ registry:
   # Add each repositories that would be used in the deployment
   repositories:
     &reg_repos
-    - <REGISTRY_USERNAME>/petstore
+    - <REGISTRY_USERNAME>/wso2mi
 
 # Values to configure Spinnaker
 spinnaker:
