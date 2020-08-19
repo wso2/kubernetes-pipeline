@@ -276,7 +276,8 @@ data:
               cat \$CHART_NAME | base64 > test
               CHART_CONTENT=`tr -d '\\n' < test`
 
-              echo '{"artifacts": [ {"type": "embedded/base64","name": "'"\$CHART_NAME"'", "reference": "'"\$CHART_CONTENT"'" }, {"type": "embedded/base64","name": "values-dev.yaml","reference": "'"\$VALUES_DEV_CONTENT"'" }, {"type": "embedded/base64","name": "values-prod.yaml","reference": "'"\$VALUES_PROD_CONTENT"'" }, {"type": "embedded/base64","name": "values-staging.yaml","reference": "'"\$VALUES_STAGING_CONTENT"'" } ]}' > data.json
+              echo '{"application": "{{ $application.name }}", "artifacts": [ {"type": "embedded/base64","name": "'"\$CHART_NAME"'",
+              "reference": "'"\$CHART_CONTENT"'" }, {"type": "embedded/base64","name": "values-dev.yaml","reference": "'"\$VALUES_DEV_CONTENT"'" }, {"type": "embedded/base64","name": "values-prod.yaml","reference": "'"\$VALUES_PROD_CONTENT"'" }, {"type": "embedded/base64","name": "values-staging.yaml","reference": "'"\$VALUES_STAGING_CONTENT"'" } ]}' > data.json
 
               APP_ENDPOINT=http://spin-gate.{{ $namespace }}.svc.cluster.local:8084/applications/{{ .name }}
               while [ "\$(curl -s -o /dev/null -w ''%{http_code}'' \$APP_ENDPOINT)" != "200" ]; do sleep 60; done
