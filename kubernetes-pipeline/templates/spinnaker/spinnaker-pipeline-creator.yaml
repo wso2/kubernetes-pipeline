@@ -348,7 +348,9 @@ data:
                     "aec2c4f1-2cb2-4d50-962a-dedc2a7457e0",
                     "14234aae-38d8-424b-9d11-76cbade0e194"
                 ],
-                "payloadConstraints": {},
+                "payloadConstraints": {
+                  "application": "{{ .name }}"
+                },
                 "source": "chart",
                 "type": "webhook"
             }
