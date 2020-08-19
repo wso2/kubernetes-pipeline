@@ -137,13 +137,7 @@ prometheus-operator:
     enabled: false
   kubeProxy:
     enabeld: false
-  prometheus:
-    prometheusSpec:
-      image:
-        tag: v2.13.1
   grafana:
-    image:
-      tag: 6.1.6
     adminPassword: "admin"
     ingress:
       enabled: true
