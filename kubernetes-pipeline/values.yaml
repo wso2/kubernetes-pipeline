@@ -63,9 +63,6 @@ spinnaker:
 #      repositories:
 #        - org/repo
   halyard:
-    spinnakerVersion: 1.19.13
-    image:
-      tag: 1.32.0
     additionalScripts:
       create: true
       data:
