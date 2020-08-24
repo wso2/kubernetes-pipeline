@@ -38,6 +38,7 @@ data:
       authorizationStrategy: loggedInUsersCanDoAnything
     jobs:
       {{- $namespace := .Release.Namespace }}
+      {{- $jenkinsBaseImageUpdateCron := .Values.jenkins.jobs.baseImageUpdate.cron }}
       {{- $root := . }}
       {{- range .Values.applications }}
       {{- $application := . }}
@@ -66,9 +67,11 @@ data:
                     }
                 }
             }
+            {{- if $jenkinsBaseImageUpdateCron }}
             triggers {
-              cron('@daily')
+              cron('{{ $jenkinsBaseImageUpdateCron }}')
             }
+            {{- end }}
             steps {
               shell("""
                 timestamp() {
