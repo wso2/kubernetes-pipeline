@@ -31,6 +31,12 @@ jenkins:
       ingress.kubernetes.io/ssl-redirect: 'true'
       kubernetes.io/ingress.class: nginx
       kubernetes.io/tls-acme: "true"
+  jobs:
+    baseImageUpdate:
+      # Defines a cron job for updating a customized product image using the corresponding latest base image
+      # Set to empty if a manual trigger of the Jenkins Job is expected is expected
+      # Refer to the Jenkins official documentation (https://www.jenkins.io/doc/book/pipeline/syntax/#cron-syntax) on how to set a cron
+      cron: '@daily'
 #    tls:
 #      - secretName: -tls
 #        hosts:
