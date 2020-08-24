@@ -1,0 +1,991 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "iteration": 1597342911218,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "panels": [],
+      "repeat": "service",
+      "scopedVars": {
+        "service": {
+          "selected": true,
+          "text": "HelloWorld",
+          "value": "HelloWorld"
+        }
+      },
+      "title": "[[service]]",
+      "type": "row"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": true,
+      "colors": [
+        "#56A64B",
+        "rgba(237, 129, 40, 0.89)",
+        "#d44a3a"
+      ],
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "format": "dtdurations",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "id": 6,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "pluginVersion": "6.6.2",
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "scopedVars": {
+        "service": {
+          "selected": true,
+          "text": "HelloWorld",
+          "value": "HelloWorld"
+        }
+      },
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "time() - max(wso2_integration_service_up{service_name=\"[[service]]\", namespace=\"$namespace\"})",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "thresholds": "",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Up Time",
+      "type": "singlestat",
+      "valueFontSize": "150%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "current"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": null,
+      "description": "Displays all time request count served by this proxy service. This will also include the error requests.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "0",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 4,
+        "y": 1
+      },
+      "id": 2,
+      "links": [],
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        }
+      },
+      "pluginVersion": "7.0.3",
+      "scopedVars": {
+        "service": {
+          "selected": true,
+          "text": "HelloWorld",
+          "value": "HelloWorld"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(max_over_time(wso2_integration_proxy_request_count_total{service_name=\"[[service]]\", namespace=\"$namespace\"}[$__range])-min_over_time(wso2_integration_proxy_request_count_total{service_name=\"[[service]]\", namespace=\"$namespace\"}[$__range]))",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "All Request Count",
+      "type": "stat"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "Prometheus",
+      "description": "Displays approximate request count received by this proxy service within the selected time range.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "0",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 8,
+        "y": 1
+      },
+      "id": 16,
+      "links": [],
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        }
+      },
+      "pluginVersion": "7.0.3",
+      "scopedVars": {
+        "service": {
+          "selected": true,
+          "text": "HelloWorld",
+          "value": "HelloWorld"
+        }
+      },
+      "targets": [
+        {
+          "expr": "(sum(max_over_time(wso2_integration_proxy_request_count_total{service_name=\"[[service]]\", namespace=\"$namespace\"}[$__range])-min_over_time(wso2_integration_proxy_request_count_total{service_name=\"[[service]]\", namespace=\"$namespace\"}[$__range])))-(sum(max_over_time(wso2_integration_proxy_request_count_error_total{service_name=\"[[service]]\", namespace=\"$namespace\"}[$__range])-min_over_time(wso2_integration_proxy_request_count_error_total{service_name=\"[[service]]\", namespace=\"$namespace\"}[$__range])))",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        },
+        {
+          "expr": "(sum(max_over_time(wso2_integration_proxy_request_count_total{service_name=\"[[service]]\", namespace=\"$namespace\"}[$__range])-min_over_time(wso2_integration_proxy_request_count_total{service_name=\"[[service]]\", namespace=\"$namespace\"}[$__range])))",
+          "hide": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "B"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Successful Request Count",
+      "transformations": [],
+      "type": "stat"
+    },
+    {
+      "datasource": null,
+      "description": "Displays all time error count occurred within this proxy service. Use below link to visit error logs for this service for this time period",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "links": [
+            {
+              "targetBlank": false,
+              "title": "View Error logs",
+              "url": "explore?orgId=1&left=[\"${__from}\",\"${__to}\",\"Loki\",{\"expr\":\"{service=\\\"{proxy:FaultProxy}\\\",log_level=\\\"ERROR\\\"}\",\"datasource\":\"Loki\"},{\"mode\":\"Logs\"},{\"ui\":[true,true,true,\"none\"]}]"
+            }
+          ],
+          "mappings": [
+            {
+              "from": "",
+              "id": 1,
+              "operator": "",
+              "text": "0",
+              "to": "",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "semi-dark-red",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 12,
+        "y": 1
+      },
+      "id": 20,
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "Error logs",
+          "url": "explore?orgId=1&left=[\"${__from}\",\"${__to}\",\"Loki\",{\"expr\":\"{service=\\\"{proxy:$var-service=${service}}\\\",log_level=\\\"ERROR\\\"}\",\"datasource\":\"Loki\"},{\"mode\":\"Logs\"},{\"ui\":[true,true,true,\"none\"]}]"
+        }
+      ],
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        }
+      },
+      "pluginVersion": "7.0.3",
+      "scopedVars": {
+        "service": {
+          "selected": true,
+          "text": "HelloWorld",
+          "value": "HelloWorld"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(max_over_time(wso2_integration_proxy_request_count_error_total{service_name=\"[[service]]\", namespace=\"$namespace\"}[$__range])-min_over_time(wso2_integration_proxy_request_count_error_total{service_name=\"[[service]]\", namespace=\"$namespace\"}[$__range]))",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Error Count",
+      "type": "stat"
+    },
+    {
+      "datasource": null,
+      "description": "Displays number of error requests occurred during the selected time range.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [
+            {
+              "from": "",
+              "id": 0,
+              "operator": "",
+              "text": "0%",
+              "to": "",
+              "type": 1,
+              "value": ""
+            }
+          ],
+          "noValue": "0%",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "semi-dark-red",
+                "value": 0.7499
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 16,
+        "y": 1
+      },
+      "id": 19,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        }
+      },
+      "pluginVersion": "7.0.3",
+      "scopedVars": {
+        "service": {
+          "selected": true,
+          "text": "HelloWorld",
+          "value": "HelloWorld"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(max_over_time(wso2_integration_proxy_request_count_error_total{service_name=\"[[service]]\", namespace=\"$namespace\"}[$__range])-min_over_time(wso2_integration_proxy_request_count_error_total{service_name=\"[[service]]\", namespace=\"$namespace\"}[$__range]))/sum(max_over_time(wso2_integration_proxy_request_count_total{service_name=\"[[service]]\", namespace=\"$namespace\"}[$__range])-min_over_time(wso2_integration_proxy_request_count_total{service_name=\"[[service]]\", namespace=\"$namespace\"}[$__range]))",
+          "interval": "30s",
+          "legendFormat": "Current",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Error Percentage",
+      "transformations": [],
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "description": "Displays number of nodes this proxy service is deployed.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "id": 18,
+      "links": [],
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        }
+      },
+      "pluginVersion": "7.0.3",
+      "scopedVars": {
+        "service": {
+          "selected": true,
+          "text": "HelloWorld",
+          "value": "HelloWorld"
+        }
+      },
+      "targets": [
+        {
+          "expr": "count(wso2_integration_service_up{service_name=\"[[service]]\", namespace=\"$namespace\"})",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Deployed Node Count",
+      "type": "stat"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "Displays the request rate for this proxy service.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 6
+      },
+      "hiddenSeries": false,
+      "id": 9,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": false,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "scopedVars": {
+        "service": {
+          "selected": true,
+          "text": "HelloWorld",
+          "value": "HelloWorld"
+        }
+      },
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(rate(wso2_integration_proxy_request_count_total{service_name=\"[[service]]\", namespace=\"$namespace\", }[$__interval]))",
+          "interval": "70s",
+          "intervalFactor": 1,
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Request Rate",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:55",
+          "decimals": 0,
+          "format": "reqps",
+          "label": "TPS",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:56",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "Displays error rate of this proxy service.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 6
+      },
+      "hiddenSeries": false,
+      "id": 12,
+      "interval": "",
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": false,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "scopedVars": {
+        "service": {
+          "selected": true,
+          "text": "HelloWorld",
+          "value": "HelloWorld"
+        }
+      },
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(rate(wso2_integration_proxy_request_count_error_total{service_name=\"[[service]]\", namespace=\"$namespace\"}[$__interval]))",
+          "interval": "1m",
+          "legendFormat": "{{kubernetes_pod_name}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Error Rate",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": null,
+          "format": "short",
+          "label": "TPS",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "cards": {
+        "cardPadding": null,
+        "cardRound": null
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateYlOrRd",
+        "exponent": 0.5,
+        "min": null,
+        "mode": "spectrum"
+      },
+      "dataFormat": "tsbuckets",
+      "datasource": null,
+      "description": "Displays the response time of all requests served by this proxy service in a heat map. Each tile will represent number of requests which fell in to the pre-defined time bucket during the bucket time span. If you seen any anomalies  please use the below link to view tracing information related to [[service]]",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 6
+      },
+      "heatmap": {},
+      "hideZeroBuckets": false,
+      "highlightCards": true,
+      "id": 13,
+      "interval": "",
+      "legend": {
+        "show": true
+      },
+      "links": [
+        {
+          "targetBlank": true,
+          "title": "Tracing UI",
+          "url": "http://[[jaegerHost]]/search?service=wso2-synapse&tags={\"componentName\":\"[[service]]\"}&start=${__from}000&end=${__to}000&lookback=custom"
+        }
+      ],
+      "reverseYBuckets": false,
+      "scopedVars": {
+        "service": {
+          "selected": true,
+          "text": "HelloWorld",
+          "value": "HelloWorld"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (le)(increase(wso2_integration_proxy_latency_seconds{service_name=\"[[service]]\", namespace=\"$namespace\", le=~\".+\"}[5m]))",
+          "format": "heatmap",
+          "hide": false,
+          "interval": "1m",
+          "legendFormat": "{{le}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Response Time",
+      "tooltip": {
+        "show": true,
+        "showHistogram": false
+      },
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": null,
+      "yAxis": {
+        "decimals": null,
+        "format": "s",
+        "logBase": 1,
+        "max": null,
+        "min": null,
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "upper",
+      "yBucketNumber": null,
+      "yBucketSize": null
+    },
+    {
+      "datasource": "Loki",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 15,
+      "options": {
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": true
+      },
+      "scopedVars": {
+        "service": {
+          "selected": true,
+          "text": "HelloWorld",
+          "value": "HelloWorld"
+        }
+      },
+      "targets": [
+        {
+          "expr": "{service=\"{proxy:[[service]]}\"}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Logs",
+      "type": "logs"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 25,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": "wso2mitenanta-dev",
+          "value": [
+            "wso2mitenanta-dev"
+          ]
+        },
+        "datasource": "Prometheus",
+        "definition": "label_values(wso2_integration_service_up{service_type=\"proxy\"}, namespace)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Namespace",
+        "multi": true,
+        "name": "namespace",
+        "options": [],
+        "query": "label_values(wso2_integration_service_up{service_type=\"proxy\"}, namespace)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": "HelloWorld",
+          "value": [
+            "HelloWorld"
+          ]
+        },
+        "datasource": "Prometheus",
+        "definition": "label_values(wso2_integration_service_up{service_type=\"proxy\", namespace=\"$namespace\"}, service_name)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Service Name",
+        "multi": true,
+        "name": "service",
+        "options": [],
+        "query": "label_values(wso2_integration_service_up{service_type=\"proxy\", namespace=\"$namespace\"}, service_name)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "10.44.2.67:9201",
+          "value": "10.44.2.67:9201"
+        },
+        "datasource": "Prometheus",
+        "definition": "label_values(wso2_integration_service_up{service_name=\"$service\"}, instance)",
+        "hide": 2,
+        "includeAll": false,
+        "label": "Node Name",
+        "multi": false,
+        "name": "node",
+        "options": [],
+        "query": "label_values(wso2_integration_service_up{service_name=\"$service\"}, instance)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "localhost:8080",
+          "value": "localhost:8080"
+        },
+        "hide": 2,
+        "label": null,
+        "name": "jaegerHost",
+        "options": [
+          {
+            "selected": true,
+            "text": "localhost:8080",
+            "value": "localhost:8080"
+          }
+        ],
+        "query": "localhost:8080",
+        "skipUrlSync": false,
+        "type": "constant"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-2d",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "timezone": "",
+  "title": "WSO2 Proxy Service Metrics",
+  "uid": "wso2-observerbility-proxy",
+  "version": 1
+}
