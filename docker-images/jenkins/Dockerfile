@@ -16,13 +16,17 @@ FROM jenkins/jenkins:2.235.2
 
 USER root
 
+# Build arguments
 ARG HELM_VERSION=v3.2.4
 ARG JMETER_VERSION=5.1
-ARG MGW_TOOLKIT_VERSION=3.0.1
 ARG DOCKER_VERSION="18.06.3~ce~3-0~debian"
 ARG MAVEN_VERSION=3.6.3
 ARG MAVEN_SHA=c35a1803a6e70a126e80b2b3ae33eed961f83ed74d18fcd16909b2d44d7dada3203f1ffe726c17ef8dcca2dcaa9fca676987befeadc9b9f759967a8cb77181c0
 ARG MAVEN_BASE_URL=https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries
+# Build arguments for WSO2 Microgateway Toolkit installation
+ARG MGW_TOOLKIT_VERSION=3.2.0
+ARG MGW_TOOLKIT_DIST_NAME=wso2am-micro-gw-toolkit-linux-${MGW_TOOLKIT_VERSION}
+ARG MGW_TOOLKIT_DIST_URL=https://github.com/wso2/product-microgateway/releases/download/v${MGW_TOOLKIT_VERSION}/${MGW_TOOLKIT_DIST_NAME}.zip
 
 # Install Docker
 RUN \
@@ -51,6 +55,7 @@ RUN \
     wget https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz \
     && tar -zxvf helm-${HELM_VERSION}-linux-amd64.tar.gz \
     && mv linux-amd64/helm /usr/local/bin/helm \
+    && rm helm-${HELM_VERSION}-linux-amd64.tar.gz \
     && rm -r linux-amd64
 
 # Install JMeter
@@ -65,11 +70,14 @@ RUN \
     && gpasswd -a jenkins dsock \
     && usermod -aG sudo jenkins
 
-# Install microgateway toolkit
-COPY wso2am-micro-gw-toolkit-${MGW_TOOLKIT_VERSION} /wso2am-micro-gw-toolkit-${MGW_TOOLKIT_VERSION}
-
 # Copy the integration test Jenkins Job specification
 COPY --chown=jenkins:jenkins config.xml /config.xml
+
+# Install microgateway toolkit
+RUN \
+    wget --no-check-certificate "${MGW_TOOLKIT_DIST_URL}" \
+    && unzip -d / ${MGW_TOOLKIT_DIST_NAME}.zip \
+    && rm -f ${MGW_TOOLKIT_DIST_NAME}.zip
 
 # Pre-Install Jenkins Plugins
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
@@ -80,6 +88,6 @@ COPY --chown=root:root jenkins.sh /usr/local/bin/jenkins.sh
 # Set environment variables
 ENV MAVEN_CONFIG="/.m2" \
     MAVEN_HOME="/usr/share/maven" \
-    PATH="${PATH}:/wso2am-micro-gw-toolkit-${MGW_TOOLKIT_VERSION}/bin:/usr/local/apache-jmeter-${JMETER_VERSION}/bin"
+    PATH="${PATH}:/${MGW_TOOLKIT_DIST_NAME}/bin:/usr/local/apache-jmeter-${JMETER_VERSION}/bin"
 
 USER jenkins
