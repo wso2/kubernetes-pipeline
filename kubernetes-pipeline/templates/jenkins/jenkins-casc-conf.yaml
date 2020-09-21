@@ -101,7 +101,25 @@ data:
                 TAG=`git rev-parse --short HEAD`
 
                 {{- if $image.wso2microIntegrator }}
-                mvn clean install -Ddockerfile.base.image=\$TAGGED_BASE_IMAGE -Ddockerfile.tag=\$TIMESTAMP-\$TAG -Ddockerfile.repository=\$REGISTRY_NAME/\$REPOSITORY -Ddockerfile.username=\$REGISTRY_USERNAME -Ddockerfile.password=\$REGISTRY_PASSWORD -Ddockerfile.build.pullNewerImage=false
+                {{- if $image.wso2microIntegrator.remoteSynapseTestServer.enabled }}
+                mvn clean install -Ddockerfile.base.image=\$TAGGED_BASE_IMAGE \
+                -Ddockerfile.tag=\$TIMESTAMP-\$TAG \
+                -Ddockerfile.repository=\$REGISTRY_NAME/\$REPOSITORY \
+                -Ddockerfile.username=\$REGISTRY_USERNAME \
+                -Ddockerfile.password=\$REGISTRY_PASSWORD \
+                -Ddockerfile.build.pullNewerImage=false \
+                -DtestServerType=remote \
+                -DtestServerHost={{ $image.wso2microIntegrator.remoteSynapseTestServer.hostname }} \
+                -DtestServerPort={{ $image.wso2microIntegrator.remoteSynapseTestServer.port }}
+                {{- else }}
+                mvn clean install -Ddockerfile.base.image=\$TAGGED_BASE_IMAGE \
+                -Ddockerfile.tag=\$TIMESTAMP-\$TAG \
+                -Ddockerfile.repository=\$REGISTRY_NAME/\$REPOSITORY \
+                -Ddockerfile.username=\$REGISTRY_USERNAME \
+                -Ddockerfile.password=\$REGISTRY_PASSWORD \
+                -Ddockerfile.build.pullNewerImage=false \
+                -Dmaven.test.skip=true
+                {{- end }}
                 {{- else }}
                 sed -i \"s|<BASE>|\$TAGGED_BASE_IMAGE|\" Dockerfile
                 docker build -t \$REGISTRY_NAME/\$REPOSITORY:\$TIMESTAMP-\$TAG .
@@ -164,7 +182,25 @@ data:
 
                 TAG=`git rev-parse --short HEAD`
                 {{- if $image.wso2microIntegrator }}
-                mvn clean install -Ddockerfile.base.image=\$TAGGED_BASE_IMAGE -Ddockerfile.tag=\$TIMESTAMP-\$TAG -Ddockerfile.repository=\$REGISTRY_NAME/\$REPOSITORY -Ddockerfile.username=\$REGISTRY_USERNAME -Ddockerfile.password=\$REGISTRY_PASSWORD -Ddockerfile.build.pullNewerImage=false
+               {{- if $image.wso2microIntegrator.remoteSynapseTestServer.enabled }}
+                mvn clean install -Ddockerfile.base.image=\$TAGGED_BASE_IMAGE \
+                -Ddockerfile.tag=\$TIMESTAMP-\$TAG \
+                -Ddockerfile.repository=\$REGISTRY_NAME/\$REPOSITORY \
+                -Ddockerfile.username=\$REGISTRY_USERNAME \
+                -Ddockerfile.password=\$REGISTRY_PASSWORD \
+                -Ddockerfile.build.pullNewerImage=false \
+                -DtestServerType=remote \
+                -DtestServerHost={{ $image.wso2microIntegrator.remoteSynapseTestServer.hostname }} \
+                -DtestServerPort={{ $image.wso2microIntegrator.remoteSynapseTestServer.port }}
+               {{- else }}
+                mvn clean install -Ddockerfile.base.image=\$TAGGED_BASE_IMAGE \
+                -Ddockerfile.tag=\$TIMESTAMP-\$TAG \
+                -Ddockerfile.repository=\$REGISTRY_NAME/\$REPOSITORY \
+                -Ddockerfile.username=\$REGISTRY_USERNAME \
+                -Ddockerfile.password=\$REGISTRY_PASSWORD \
+                -Ddockerfile.build.pullNewerImage=false \
+                -Dmaven.test.skip=true
+               {{- end }}
                 {{- else }}
                 sed -i \"s|<BASE>|\$TAGGED_BASE_IMAGE|\" Dockerfile
                 docker build -t \$REGISTRY_NAME/\$REPOSITORY:\$TIMESTAMP-\$TAG .
