@@ -126,6 +126,12 @@ elasticsearch:
   esJavaOpts: -Xms512m -Xmx512m
 
 prometheus-operator:
+  admissionWebhooks:
+    enabled: false
+    patch:
+      enabled: false
+  tlsProxy:
+    enabled: false
   kubeEtcd: # Disable Etcd metrics
     enabled: false
   kubeControllerManager: #Disble KubeController Metrics
