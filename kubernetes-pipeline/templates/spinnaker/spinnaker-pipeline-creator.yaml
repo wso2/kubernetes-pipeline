@@ -32,7 +32,7 @@ spec:
         image: busybox:1.31
         command: ['sh', '-c', 'echo -e "Checking for the availability of front50 deployment"; while ! nc -z "spin-front50" 8080; do sleep 1; printf "-"; done; echo -e "  >> front50 has started";']
       - name: wait-for-spin-gate
-        image: wso2/kubernetes-pipeline-spin
+        image: wso2/kubernetes-pipeline-spin:1.19.0
         command: ["/bin/sh"]
         args: ["-c", "until spin application list --gate-endpoint $SPINNAKER_API; do echo 'Request to spin-gate failed. Retrying in 5s'; sleep 5; done;"]
         env:
@@ -40,7 +40,7 @@ spec:
           value: "http://spin-gate.{{ $root.Release.Namespace }}.svc.cluster.local:8084"
       containers:
       - name: spin
-        image: wso2/kubernetes-pipeline-spin
+        image: wso2/kubernetes-pipeline-spin:1.19.0
         command: ["/bin/sh"]
         args: ["-c", "sh /spinnaker/run.sh"]
         env:
