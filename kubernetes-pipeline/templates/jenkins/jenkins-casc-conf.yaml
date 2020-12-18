@@ -69,21 +69,20 @@ data:
             }
             {{- if $jenkinsBaseImageUpdateCron }}
             triggers {
+              scm('* * * * *')
               cron('{{ $jenkinsBaseImageUpdateCron }}')
             }
             {{- end }}
             steps {
               shell("""
-                timestamp() {
-                  date +\"%Y%m%d%H%M%S\"
-                }
 
+                set +x
                 {{- if and (not (eq $root.Values.wso2Username "")) (not (eq $root.Values.wso2Password "")) }}
                 docker login docker.wso2.com -u \$WSO2_USERNAME -p \$WSO2_PASSWORD
                 {{- end }}
                 docker login -u \$REGISTRY_USERNAME -p \$REGISTRY_PASSWORD
+                set -x
 
-                TIMESTAMP=`date +%Y%m%d%H%M%S`
                 REGISTRY_NAME="{{ $root.Values.registry.address }}/{{ $image.organization }}"
                 REPOSITORY="{{ $image.repository }}"
                 {{- if $image.wso2microIntegrator }}
@@ -91,19 +90,15 @@ data:
                 {{- else }}
                 BASE_IMAGE="{{ $image.customImage.baseImage }}"
                 {{- end }}
-                TAGGED_BASE_IMAGE=\$REGISTRY_NAME/\$REPOSITORY-wum:\$TIMESTAMP
+                TAG=`echo \$BASE_IMAGE | cut -d ':' -f 2`
 
-                # Tag WSO2 image with current timestamp
                 docker pull \$BASE_IMAGE
-                docker tag \$BASE_IMAGE \$TAGGED_BASE_IMAGE
 
-                # Build custom image using the wum updated image
-                TAG=`git rev-parse --short HEAD`
-
+                GIT_TAG=`git rev-parse --short HEAD`
                 {{- if $image.wso2microIntegrator }}
                 {{- if $image.wso2microIntegrator.remoteSynapseTestServer.enabled }}
-                mvn clean install -Ddockerfile.base.image=\$TAGGED_BASE_IMAGE \
-                -Ddockerfile.tag=\$TIMESTAMP-\$TAG \
+                mvn clean install -Ddockerfile.base.image=\$BASE_IMAGE \
+                -Ddockerfile.tag=\$TAG-\$GIT_TAG \
                 -Ddockerfile.repository=\$REGISTRY_NAME/\$REPOSITORY \
                 -Ddockerfile.username=\$REGISTRY_USERNAME \
                 -Ddockerfile.password=\$REGISTRY_PASSWORD \
@@ -112,7 +107,7 @@ data:
                 -DtestServerHost={{ $image.wso2microIntegrator.remoteSynapseTestServer.hostname }} \
                 -DtestServerPort={{ $image.wso2microIntegrator.remoteSynapseTestServer.port }}
                 {{- else }}
-                mvn clean install -Ddockerfile.base.image=\$TAGGED_BASE_IMAGE \
+                mvn clean install -Ddockerfile.base.image=\$BASE_IMAGE \
                 -Ddockerfile.tag=\$TIMESTAMP-\$TAG \
                 -Ddockerfile.repository=\$REGISTRY_NAME/\$REPOSITORY \
                 -Ddockerfile.username=\$REGISTRY_USERNAME \
@@ -121,93 +116,16 @@ data:
                 -Dmaven.test.skip=true
                 {{- end }}
                 {{- else }}
-                sed -i \"s|<BASE>|\$TAGGED_BASE_IMAGE|\" Dockerfile
-                docker build -t \$REGISTRY_NAME/\$REPOSITORY:\$TIMESTAMP-\$TAG .
-                docker push \$REGISTRY_NAME/\$REPOSITORY:\$TIMESTAMP-\$TAG
+                sed -i \"s|<BASE>|\$BASE_IMAGE|\" Dockerfile
+
+                set +x
+                docker build --build-arg WSO2_USERNAME=\$WSO2_USERNAME --build-arg WSO2_PASSWORD=\$WSO2_PASSWORD -t \$REGISTRY_NAME/\$REPOSITORY:\$TAG-\$GIT_TAG .
+                set -x
+
+                docker push \$REGISTRY_NAME/\$REPOSITORY:\$TAG-\$GIT_TAG
                 {{- end }}
 
-                docker tag \$REGISTRY_NAME/\$REPOSITORY:\$TIMESTAMP-\$TAG \$REGISTRY_NAME/\$REPOSITORY:latest
-                docker push \$REGISTRY_NAME/\$REPOSITORY:latest
-                """)
-            }
-          }
-      - script: >
-          job("{{ $application.name }}/{{ $image.repository }}-artifacts") {
-            description()
-            logRotator(10)
-            keepDependencies(false)
-            disabled(false)
-            concurrentBuild(true)
-            scm {
-                git {
-                    remote {
-                        name('docker-repo')
-                        {{- if $image.wso2microIntegrator }}
-                        url('{{ $image.wso2microIntegrator.gitRepository }}')
-                        {{- else }}
-                        url('{{ $image.customImage.dockerfileGitRepo }}')
-                        {{- end }}
-                        credentials('github_credentials')
-                    }
-                }
-            }
-            triggers {
-                scm('* * * * *')
-            }
-            steps {
-              shell("""
-
-                {{- if and (not (eq $root.Values.wso2Username "")) (not (eq $root.Values.wso2Password "")) }}
-                docker login docker.wso2.com -u \$WSO2_USERNAME -p \$WSO2_PASSWORD
-                {{- end }}
-                docker login -u \$REGISTRY_USERNAME -p \$REGISTRY_PASSWORD
-
-                TIMESTAMP=`date +%Y%m%d%H%M%S`
-                REGISTRY_NAME="{{ $root.Values.registry.address }}/{{ $image.organization }}"
-                REPOSITORY="{{ $image.repository }}"
-                {{- if $image.wso2microIntegrator }}
-                BASE_IMAGE="{{ $image.wso2microIntegrator.baseImage }}"
-                {{- else }}
-                BASE_IMAGE="{{ $image.customImage.baseImage }}"
-                {{- end }}
-
-                WUM_TIMESTAMP=`docker images \$REGISTRY_NAME/\$REPOSITORY-wum --format '{{ "{{ .Tag }}" }}' | sort -nrk1 | head -1`
-                if [ -z "\$WUM_TIMESTAMP" ]
-                then
-                  docker pull \$BASE_IMAGE
-                  docker tag \$BASE_IMAGE \$REGISTRY_NAME/\$REPOSITORY-wum:\$TIMESTAMP
-                  WUM_TIMESTAMP=\$TIMESTAMP
-                fi
-                TAGGED_BASE_IMAGE=\$REGISTRY_NAME/\$REPOSITORY-wum:\$WUM_TIMESTAMP
-
-                TAG=`git rev-parse --short HEAD`
-                {{- if $image.wso2microIntegrator }}
-               {{- if $image.wso2microIntegrator.remoteSynapseTestServer.enabled }}
-                mvn clean install -Ddockerfile.base.image=\$TAGGED_BASE_IMAGE \
-                -Ddockerfile.tag=\$TIMESTAMP-\$TAG \
-                -Ddockerfile.repository=\$REGISTRY_NAME/\$REPOSITORY \
-                -Ddockerfile.username=\$REGISTRY_USERNAME \
-                -Ddockerfile.password=\$REGISTRY_PASSWORD \
-                -Ddockerfile.build.pullNewerImage=false \
-                -DtestServerType=remote \
-                -DtestServerHost={{ $image.wso2microIntegrator.remoteSynapseTestServer.hostname }} \
-                -DtestServerPort={{ $image.wso2microIntegrator.remoteSynapseTestServer.port }}
-               {{- else }}
-                mvn clean install -Ddockerfile.base.image=\$TAGGED_BASE_IMAGE \
-                -Ddockerfile.tag=\$TIMESTAMP-\$TAG \
-                -Ddockerfile.repository=\$REGISTRY_NAME/\$REPOSITORY \
-                -Ddockerfile.username=\$REGISTRY_USERNAME \
-                -Ddockerfile.password=\$REGISTRY_PASSWORD \
-                -Ddockerfile.build.pullNewerImage=false \
-                -Dmaven.test.skip=true
-               {{- end }}
-                {{- else }}
-                sed -i \"s|<BASE>|\$TAGGED_BASE_IMAGE|\" Dockerfile
-                docker build -t \$REGISTRY_NAME/\$REPOSITORY:\$TIMESTAMP-\$TAG .
-                docker push \$REGISTRY_NAME/\$REPOSITORY:\$WUM_TIMESTAMP-\$TAG
-                {{- end }}
-
-                docker tag \$REGISTRY_NAME/\$REPOSITORY:\$WUM_TIMESTAMP-\$TAG \$REGISTRY_NAME/\$REPOSITORY
+                docker tag \$REGISTRY_NAME/\$REPOSITORY:\$TAG-\$GIT_TAG \$REGISTRY_NAME/\$REPOSITORY
                 docker push \$REGISTRY_NAME/\$REPOSITORY
                 """)
             }
