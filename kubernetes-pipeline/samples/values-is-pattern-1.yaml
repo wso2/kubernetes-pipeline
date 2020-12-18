@@ -49,12 +49,12 @@ applications:
     chart:
       customChart: false
       name: is-pattern-1
-      version: 5.8.0-3
+      version: 5.11.0-2
       repo: 'https://github.com/wso2-incubator/cicd-sample-chart-is'
     images:
       - organization: *reg_username
         repository: wso2is
         deployment: wso2is
         customImage:
-          baseImage: 'wso2/wso2is:5.8.0'
+          baseImage: 'wso2/wso2is:5.11.0'
           dockerfileGitRepo: 'https://github.com/wso2-incubator/cicd-sample-docker-is'
