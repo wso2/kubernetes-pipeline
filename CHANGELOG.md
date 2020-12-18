@@ -3,6 +3,17 @@ All notable changes to this project per each release will be documented in this 
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## [v1.2.0] - 2020-12-18
+
+### Environments
+
+- Successful evaluation of Kubernetes pipeline Helm chart in Google Kubernetes Engine (GKE) versions: `1.18.12-gke.1200`
+
+### Changed
+
+- Use updates 2.0 image tagging mechanism (refer to [issue](https://github.com/wso2/kubernetes-pipeline/issues/109))
+- Support for k8s 1.18 (refer to [issue](https://github.com/wso2/kubernetes-pipeline/issues/108))
+
 ## [v1.1.0] - 2020-09-22
 
 ### Environments
