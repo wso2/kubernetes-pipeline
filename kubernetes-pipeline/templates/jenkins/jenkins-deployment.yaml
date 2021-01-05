@@ -34,10 +34,10 @@ spec:
     spec:
       serviceAccountName: jenkins
       initContainers:
-      - image: alpine/helm:2.14.0
+      - image: alpine/helm:3.4.2
         name: helm-config
         command: ["/bin/sh"]
-        args: ["-c", "helm init --client-only; helm repo remove local; helm repo add wso2 https://helm.wso2.com; helm repo update"]
+        args: ["-c", "helm repo add wso2 https://helm.wso2.com; helm repo update"]
         volumeMounts:
         - name: helm-conf
           mountPath: "/root/.helm"
