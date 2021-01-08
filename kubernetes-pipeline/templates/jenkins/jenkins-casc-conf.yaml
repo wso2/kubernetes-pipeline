@@ -108,7 +108,7 @@ data:
                 -DtestServerPort={{ $image.wso2microIntegrator.remoteSynapseTestServer.port }}
                 {{- else }}
                 mvn clean install -Ddockerfile.base.image=\$BASE_IMAGE \
-                -Ddockerfile.tag=\$TIMESTAMP-\$TAG \
+                -Ddockerfile.tag=\$TAG-\$GIT_TAG \
                 -Ddockerfile.repository=\$REGISTRY_NAME/\$REPOSITORY \
                 -Ddockerfile.username=\$REGISTRY_USERNAME \
                 -Ddockerfile.password=\$REGISTRY_PASSWORD \
