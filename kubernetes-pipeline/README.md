@@ -18,7 +18,7 @@ Following are the tools used to install and monitor the pipeline
 
 ### Prerequisites
 
-- Install and set up Helm (Supported version 2.14.3)
+- Install and set up Helm
 
 - Install NGINX Ingress Controller.
 
@@ -52,7 +52,8 @@ Following are the tools used to install and monitor the pipeline
 4. Install the pipeline Helm chart by referring to the updated `values.yaml` file.
 
     ```
-    helm install --name <RELEASE_NAME> wso2/kubernetes-pipeline -f values.yaml --namespace <NAMESPACE>
+    kubectl create namespace <NAMESPACE>
+    helm install <RELEASE_NAME> wso2/kubernetes-pipeline -f values.yaml --namespace <NAMESPACE>
     ```
 
 > In the following steps, `example.com` refers to the default domain name. 
