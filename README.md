@@ -1,4 +1,8 @@
 # Helm Resources for WSO2 Kubernetes Pipeline
+> **Warning**
+>
+>   This development has been suspended, and the CICD pipeline is deprecated.
+> 
 
 WSO2 Kubernetes Pipeline provides tools and a preconfigured pipeline used for continuous integration and deployment.
 The setup is deployed on top of Kubernetes using Helm, which makes the processes of configuring, installing, scaling and upgrading, quite simple.
